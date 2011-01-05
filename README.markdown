@@ -1,8 +1,9 @@
 # Y
 
-Класс-ярлык для часто употребляемых выражений [http://www.yiiframework.com](Yii framework)
+Класс-ярлык для часто употребляемых выражений [Yii framework](http://www.yiiframework.com)
 
-## Установка
+
+## Получение
 
 `git clone git://github.com/Svyatov/Yii-Shortcut.git`
 
