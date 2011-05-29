@@ -4,103 +4,158 @@
  *
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2011, Leonid Svyatov
+ * @link http://github.com/Svyatov/Yii-Shortcut
  * @license http://www.yiiframework.com/license/
- * @version 1.0.4 / 05.01.2011
+ * @version 1.1.0 / 29.05.2011
  */
 class Y
 {
     /**
      * Возвращает относительный URL приложения
+     * @param bool $absolute Вернуть ли абсолютный URL, по умолчанию false
+     * Этот параметр появился с версии 1.1.0
      * @return string
      */
-    public static function baseUrl()
+    public static function baseUrl($absolute = false)
     {
-        return Yii::app()->baseUrl;
+        return Yii::app()->getRequest()->getBaseUrl($absolute);
+    }
+
+    /**
+     * Возвращает true, если текущее соединение является защищенным (HTTPS), иначе false
+     * @return bool
+     * @sinse 1.1.0
+     */
+    public static function isSecureConnection()
+    {
+        return Yii::app()->getRequest()->getIsSecureConnection();
+    }
+
+    /**
+     * Возвращает true, если текущий запрос является Ajax запросом, иначе false
+     * @return bool
+     * @since 1.1.0
+     */
+    public static function isAjaxRequest()
+    {
+        return Yii::app()->getRequest()->getIsAjaxRequest();
+    }
+
+    /**
+     * Возвращает true, если текущий запрос является PUT запросом, иначе false
+     * @return bool
+     * @since 1.1.0
+     */
+    public static function isPutRequest()
+    {
+        return Yii::app()->getRequest()->getIsPutRequest();
+    }
+
+    /**
+     * Возвращает true, если текущий запрос является DELETE запросом, иначе false
+     * @return bool
+     * @since 1.1.0
+     */
+    public static function isDeleteRequest()
+    {
+        return Yii::app()->getRequest()->getIsDeleteRequest();
+    }
+
+    /**
+     * Возвращает true, если текущий запрос является POST запросом, иначе false
+     * @return bool
+     * @since 1.1.0
+     */
+    public static function isPostRequest()
+    {
+        return Yii::app()->getRequest()->getIsPostRequest();
     }
 
     /**
      * Возвращает ссылку на cache-компонент приложения
-     * @return CCache
+     * @return ICache
      */
     public static function cache()
     {
-        return Yii::app()->cache;
+        return Yii::app()->getCache();
     }
 
     /**
      * Удаляет кэш с ключом $id
-     * @param string $id имя ключа
+     * @param string $id Имя ключа
      * @return boolean
      */
     public static function cacheDelete($id)
     {
-        return Yii::app()->cache->delete($id);
+        return Yii::app()->getCache()->delete($id);
     }
 
     /**
      * Возвращает значение кэша с ключом $id
-     * @param string $id имя ключа
+     * @param string $id Имя ключа
      * @return mixed
      */
     public static function cacheGet($id)
     {
-        return Yii::app()->cache->get($id);
+        return Yii::app()->getCache()->get($id);
     }
 
     /**
      * Сохраняет значение $value в кэш с ключом $id на время $expire (в секундах)
-     * @param string $id имя ключа
-     * @param mixed $value значение ключа
-     * @param integer $expire время хранения в секундах
-     * @param ICacheDependency $dependency
+     * @param string $id Имя ключа
+     * @param mixed $value Значение ключа
+     * @param integer $expire Время хранения в секундах
+     * @param ICacheDependency $dependency Смотреть {@link ICacheDependency}
      * @return boolean
      */
     public static function cacheSet($id, $value, $expire = 0, $dependency = null)
     {
-        return Yii::app()->cache->set($id, $value, $expire, $dependency);
+        return Yii::app()->getCache()->set($id, $value, $expire, $dependency);
     }
 
     /**
      * Удаляет куку
-     * @param string $name имя куки
+     * @param string $name Имя куки
      */
-	public static function cookieDelete($name)
-	{
-	    if (isset(Yii::app()->request->cookies[$name])) {
-	        unset(Yii::app()->request->cookies[$name]);
+    public static function cookieDelete($name)
+    {
+        if (isset(Yii::app()->getRequest()->cookies[$name])) {
+            unset(Yii::app()->getRequest()->cookies[$name]);
         }
-	}
+    }
 
     /**
-     * Возвращает значение куки
-     * @param string $name имя куки
-     * @return string|null
+     * Возвращает значение куки, если оно есть, иначе значение $default
+     * @param string $name Имя куки
+     * @param mixed $default Значение, возвращаемое в случае отсутствия куки с заданным именем
+     * Этот параметр появился с версии 1.1.0
+     * @return mixed
      */
-	public static function cookieGet($name)
-	{
-	    if (isset(Yii::app()->request->cookies[$name])) {
-	        return Yii::app()->request->cookies[$name]->value;
+    public static function cookieGet($name, $default = null)
+    {
+        if (isset(Yii::app()->getRequest()->cookies[$name])) {
+            return Yii::app()->getRequest()->cookies[$name]->value;
         }
 
-        return null;
-	}
+        return $default;
+    }
 
     /**
      * Устанавливает куку
-     * @param string $name имя куки
-     * @param string $value значение куки
-     * @param integer $expire seconds время хранения (time() + ...) в секундах
-     * @param string $path путь на сайте, для которого кука действительна
-     * @param string $domain домен, для которого кука действительна
+     * @param string $name Имя куки
+     * @param string $value Значение куки
+     * @param int $expire Время хранения в секундах
+     * @param string $path Путь на сайте, для которого кука действительна
+     * @param string $domain Домен, для которого кука действительна
      */
-	public static function cookieSet($name, $value, $expire = null, $path = '/', $domain = null)
-	{
-	    $cookie = new CHttpCookie($name, $value);
-	    $cookie->expire = $expire ? $expire : 0;
-	    $cookie->path   = $path   ? $path   : '';
-	    $cookie->domain = $domain ? $domain : '';
-        Yii::app()->request->cookies[$name] = $cookie;
-	}
+    public static function cookieSet($name, $value, $expire = null, $path = '/', $domain = null)
+    {
+        $cookie = new CHttpCookie($name, $value);
+        $cookie->expire = ($expire ? $expire : 0) + time();
+        $cookie->path = $path ? $path : '';
+        $cookie->domain = $domain ? $domain : '';
+        Yii::app()->getRequest()->cookies[$name] = $cookie;
+    }
 
     /**
      * Возвращает значение токена CSRF
@@ -108,7 +163,7 @@ class Y
      */
     public static function csrf()
     {
-        return Yii::app()->request->csrfToken;
+        return Yii::app()->getRequest()->getCsrfToken();
     }
 
     /**
@@ -117,7 +172,7 @@ class Y
      */
     public static function csrfName()
     {
-        return Yii::app()->request->csrfTokenName;
+        return Yii::app()->getRequest()->csrfTokenName;
     }
 
     /**
@@ -132,28 +187,28 @@ class Y
      */
     public static function csrfJsParam()
     {
-        return Yii::app()->request->csrfTokenName.":'".Yii::app()->request->csrfToken."'";
+        return Yii::app()->getRequest()->csrfTokenName . ":'" . Yii::app()->getRequest()->getCsrfToken() . "'";
     }
 
     /**
      * Ярлык для функции dump класса CVarDumper для отладки приложения
-     * @param mixed $var переменная для вывода
-     * @param boolean $toDie остановить ли дальнейшее выполнение приложения, по умолчанию - true
+     * @param mixed $var Переменная для вывода
+     * @param boolean $doEnd Остановить ли дальнейшее выполнение приложения, по умолчанию - true
      */
-    public static function dump($var, $toDie = true)
+    public static function dump($var, $doEnd = true)
     {
         echo '<pre>';
         CVarDumper::dump($var, 10, true);
         echo '</pre>';
 
-        if ($toDie) {
+        if ($doEnd) {
             Yii::app()->end();
         }
     }
 
     /**
      * Выводит текст и завершает приложение (применяется в ajax-действиях)
-     * @param string $text текст для вывода
+     * @param string $text Текст для вывода
      */
     public static function end($text = '')
     {
@@ -163,7 +218,7 @@ class Y
 
     /**
      * Выводит данные в формате JSON и завершает приложение (применяется в ajax-действиях)
-     * @param string $data данные для вывода
+     * @param mixed $data Данные для вывода
      */
     public static function endJson($data)
     {
@@ -173,8 +228,8 @@ class Y
 
     /**
      * Устанавливает флэш-извещение для юзера
-     * @param string $key ключ извещения
-     * @param string $msg сообщение извещения
+     * @param string $key Ключ извещения
+     * @param string $msg Сообщение извещения
      */
     public static function flash($key, $msg)
     {
@@ -182,21 +237,21 @@ class Y
     }
 
     /**
-     * Устанавливает флэш-извещение для юзера и редиректит по указанному роуту
-     * @param string $key ключ извещения
-     * @param string $msg сообщение извещения
-     * @param string $route маршрут куда редиректить
-     * @param array $params дополнительные параметры маршрута
+     * Устанавливает флэш-извещение для юзера и редиректит по указанному маршруту
+     * @param string $key Ключ извещения
+     * @param string $msg Сообщение извещения
+     * @param string $route Маршрут куда редиректить
+     * @param array $params Дополнительные параметры маршрута
      */
     public static function flashRedir($key, $msg, $route, $params = array())
     {
         Yii::app()->user->setFlash($key, $msg);
-        Yii::app()->request->redirect(self::url($route, $params));
+        Yii::app()->getRequest()->redirect(self::url($route, $params));
     }
 
     /**
-     * Проверка наличия определенной роли у текущего пользователя
-     * @param string $roleName имя роли
+     * Проверяет наличие определенной роли у текущего юзера
+     * @param string $roleName Имя роли
      * @return boolean
      * @since 1.0.2
      */
@@ -211,37 +266,45 @@ class Y
      */
     public static function isAuthed()
     {
-        return !Yii::app()->user->isGuest;
+        return !Yii::app()->user->getIsGuest();
     }
-    
+
     /**
      * Возвращает true, если пользователь гость и неавторизован, иначе - false
      * @return boolean
      */
     public static function isGuest()
     {
-        return Yii::app()->user->isGuest;
+        return Yii::app()->user->getIsGuest();
     }
 
     /**
-     * Возвращает пользовательский параметр приложения с именем $key
-     * @param string $key ключ параметра или ключи через точку вложенных параметров
+     * Возвращает пользовательский параметр приложения
+     * @param string $key Ключ параметра или ключи вложенных параметров через точку
      * 'Media.Foto.thumbsize' преобразуется в ['Media']['Foto']['thumbsize']
+     * @param mixed $default Значение, возвращаемое в случае отсутствия параметра
      * @return mixed
      */
-    public static function param($key)
+    public static function param($key, $default = null)
     {
+        $params = Yii::app()->getParams();
+
         if (strpos($key, '.') === false) {
-            return Yii::app()->params[$key];
+            return ($params->contains($key)) ? $params->itemAt($key) : $default;
         }
 
         $keys = explode('.', $key);
-        $param = Yii::app()->params[$keys[0]];
+
+        if (!$params->contains($keys[0])) {
+            return $default;
+        }
+
+        $param = $params->itemAt($keys[0]);
         unset($keys[0]);
 
         foreach ($keys as $k) {
-            if (!isset($param[$k])) {
-                return null;
+            if (!isset($param[$k]) && !array_key_exists($k, $param)) {
+                return $default;
             }
             $param = $param[$k];
         }
@@ -251,35 +314,35 @@ class Y
 
     /**
      * Редиректит по указанному маршруту
-     * @param string $route маршрут
-     * @param array $params дополнительные параметры маршрута
+     * @param string $route Маршрут
+     * @param array $params Дополнительные параметры маршрута
      */
     public static function redir($route, $params = array())
     {
-        Yii::app()->request->redirect(self::url($route, $params));
+        Yii::app()->getRequest()->redirect(self::url($route, $params));
     }
 
     /**
      * Редиректит по указанному роуту, если юзер авторизован
-     * @param string $route маршрут
-     * @param array $params дополнительные параметры маршрута
+     * @param string $route Маршрут
+     * @param array $params Дополнительные параметры маршрута
      */
     public static function redirAuthed($route, $params = array())
     {
-        if (!Yii::app()->user->isGuest) {
-            Yii::app()->request->redirect(self::url($route, $params));
+        if (!Yii::app()->user->getIsGuest()) {
+            Yii::app()->getRequest()->redirect(self::url($route, $params));
         }
     }
 
     /**
      * Редиректит по указанному роуту, если юзер гость
-     * @param string $route маршрут
-     * @param array $params дополнительные параметры маршрута
+     * @param string $route Маршрут
+     * @param array $params Дополнительные параметры маршрута
      */
     public static function redirGuest($route, $params = array())
     {
-        if (Yii::app()->user->isGuest) {
-            Yii::app()->request->redirect(self::url($route, $params));
+        if (Yii::app()->user->getIsGuest()) {
+            Yii::app()->getRequest()->redirect(self::url($route, $params));
         }
     }
 
@@ -289,28 +352,28 @@ class Y
      */
     public static function request()
     {
-        return Yii::app()->request;
+        return Yii::app()->getRequest();
     }
 
     /**
      * Выводит статистику использованных приложением ресурсов
-     * @param boolean $return определяет возвращать результат или сразу выводить
+     * @param boolean $return Определяет возвращать результат или сразу выводить
      * @return string
      */
     public static function stats($return = false)
     {
         $stats = '';
-        $db_stats = Yii::app()->db->getStats();
+        $dbStats = Yii::app()->getDb()->getStats();
 
-        if (is_array($db_stats)) {
-            $stats = 'Выполнено запросов: '.$db_stats[0].' (за '.round($db_stats[1], 5).' сек.)<br />';
+        if (is_array($dbStats)) {
+            $stats = 'Выполнено запросов: ' . $dbStats[0] . ' (за ' . round($dbStats[1], 5) . ' сек.)<br />';
         }
 
-        $memory = round(Yii::getLogger()->memoryUsage/1024/1024, 3);
-        $time = round(Yii::getLogger()->executionTime, 3);
+        $memory = round(Yii::getLogger()->getMemoryUsage() / 1048576, 3);
+        $time = round(Yii::getLogger()->getExecutionTime(), 3);
 
-        $stats .= 'Использовано памяти: '.$memory.' Мб<br />';
-        $stats .= 'Время выполнения: '.$time.' сек.';
+        $stats .= 'Использовано памяти: ' . $memory . ' Мб<br />';
+        $stats .= 'Время выполнения: ' . $time . ' сек.';
 
         if ($return) {
             return $stats;
@@ -321,14 +384,14 @@ class Y
 
     /**
      * Возвращает URL, сформированный на основе указанного маршрута и параметров
-     * @param string $route маршрут
-     * @param array $params дополнительные параметры маршрута
+     * @param string $route Маршрут
+     * @param array $params Дополнительные параметры маршрута
      * @return string
      */
     public static function url($route, $params = array())
     {
-        if (is_object(Yii::app()->controller)) {
-            return Yii::app()->controller->createUrl($route, $params);
+        if (is_object($controller = Yii::app()->getController())) {
+            return $controller->createUrl($route, $params);
         }
 
         return Yii::app()->createUrl($route, $params);
@@ -336,7 +399,7 @@ class Y
 
     /**
      * Возвращает ссылку на user-компонент приложения
-     * @return CWebUser
+     * @return IWebUser
      */
     public static function user()
     {
@@ -344,11 +407,11 @@ class Y
     }
 
     /**
-     * Возвращает Id текущего пользователя
+     * Возвращает Id текущего юзера
      * @return mixed
      */
     public static function userId()
     {
-        return Yii::app()->user->id;
+        return Yii::app()->user->getId();
     }
 }
