@@ -4,21 +4,73 @@
  *
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2011, Leonid Svyatov
- * @link http://github.com/Svyatov/Yii-Shortcut
  * @license http://www.yiiframework.com/license/
- * @version 1.1.0 / 29.05.2011
+ * @version 1.1.3 / 16.07.2011
+ * @link http://github.com/Svyatov/Yii-Shortcut
  */
 class Y
 {
     /**
+     * Возвращает значение параметра $name из глобального GET-массива
+     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
+     * @param $name Имя параметра или вложенных параметров через точку
+     * Например, запрос значения параметра 'Post.post_text' будет искаться в $_GET['Post']['post_text']
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * @return mixed
+     * @sinse 1.1.2
+     */
+    public static function getGet($name, $defaultValue = null)
+    {
+        return self::_getValueByComplexKeyFromArray($name, $_GET, $defaultValue);
+    }
+
+    /**
+     * Возвращает значение параметра $name из глобального POST-массива
+     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
+     * @param $name Имя параметра или вложенных параметров через точку
+     * Например, запрос значения параметра 'Post.post_text' будет искаться в $_POST['Post']['post_text']
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * @return mixed
+     * @sinse 1.1.2
+     */
+    public static function getPost($name, $defaultValue = null)
+    {
+        return self::_getValueByComplexKeyFromArray($name, $_POST, $defaultValue);
+    }
+
+    /**
+     * Возвращает значение параметра $name из глобального REQUEST-массива
+     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
+     * @param $name Имя параметра или вложенных параметров через точку
+     * Например, запрос значения параметра 'Post.post_text' будет искаться в $_REQUEST['Post']['post_text']
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * @return mixed
+     * @sinse 1.1.2
+     */
+    public static function getRequest($name, $defaultValue = null)
+    {
+        return self::_getValueByComplexKeyFromArray($name, $_REQUEST, $defaultValue);
+    }
+
+    /**
+     * Возвращает объект PDO
+     * @param string $dbId ID компонента базы данных
+     * @return \PDO
+     * @sinse 1.1.3
+     */
+    public static function getPdo($dbId = 'db')
+    {
+        return Yii::app()->getComponent($dbId)->getPdoInstance();
+    }
+
+    /**
      * Возвращает относительный URL приложения
-     * @param bool $absolute Вернуть ли абсолютный URL, по умолчанию false
-     * Этот параметр появился с версии 1.1.0
+     * @param bool $absolute Вернуть ли абсолютный URL, по умолчанию false (@since 1.1.0)
      * @return string
      */
     public static function baseUrl($absolute = false)
     {
-        return Yii::app()->getRequest()->getBaseUrl($absolute);
+        return Yii::app()->getComponent('request')->getBaseUrl($absolute);
     }
 
     /**
@@ -28,7 +80,7 @@ class Y
      */
     public static function isSecureConnection()
     {
-        return Yii::app()->getRequest()->getIsSecureConnection();
+        return Yii::app()->getComponent('request')->getIsSecureConnection();
     }
 
     /**
@@ -38,7 +90,7 @@ class Y
      */
     public static function isAjaxRequest()
     {
-        return Yii::app()->getRequest()->getIsAjaxRequest();
+        return Yii::app()->getComponent('request')->getIsAjaxRequest();
     }
 
     /**
@@ -48,7 +100,7 @@ class Y
      */
     public static function isPutRequest()
     {
-        return Yii::app()->getRequest()->getIsPutRequest();
+        return Yii::app()->getComponent('request')->getIsPutRequest();
     }
 
     /**
@@ -58,7 +110,7 @@ class Y
      */
     public static function isDeleteRequest()
     {
-        return Yii::app()->getRequest()->getIsDeleteRequest();
+        return Yii::app()->getComponent('request')->getIsDeleteRequest();
     }
 
     /**
@@ -68,36 +120,39 @@ class Y
      */
     public static function isPostRequest()
     {
-        return Yii::app()->getRequest()->getIsPostRequest();
+        return Yii::app()->getComponent('request')->getIsPostRequest();
     }
 
     /**
      * Возвращает ссылку на cache-компонент приложения
+     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
      * @return ICache
      */
-    public static function cache()
+    public static function cache($cacheId = 'cache')
     {
-        return Yii::app()->getCache();
+        return Yii::app()->getComponent($cacheId);
     }
 
     /**
      * Удаляет кэш с ключом $id
      * @param string $id Имя ключа
+     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
      * @return boolean
      */
-    public static function cacheDelete($id)
+    public static function cacheDelete($id, $cacheId = 'cache')
     {
-        return Yii::app()->getCache()->delete($id);
+        return Yii::app()->getComponent($cacheId)->delete($id);
     }
 
     /**
      * Возвращает значение кэша с ключом $id
      * @param string $id Имя ключа
+     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
      * @return mixed
      */
-    public static function cacheGet($id)
+    public static function cacheGet($id, $cacheId = 'cache')
     {
-        return Yii::app()->getCache()->get($id);
+        return Yii::app()->getComponent($cacheId)->get($id);
     }
 
     /**
@@ -105,12 +160,13 @@ class Y
      * @param string $id Имя ключа
      * @param mixed $value Значение ключа
      * @param integer $expire Время хранения в секундах
-     * @param ICacheDependency $dependency Смотреть {@link ICacheDependency}
+     * @param ICacheDependency $dependency Смотри {@link ICacheDependency}
+     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
      * @return boolean
      */
-    public static function cacheSet($id, $value, $expire = 0, $dependency = null)
+    public static function cacheSet($id, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
     {
-        return Yii::app()->getCache()->set($id, $value, $expire, $dependency);
+        return Yii::app()->getComponent($cacheId)->set($id, $value, $expire, $dependency);
     }
 
     /**
@@ -119,22 +175,25 @@ class Y
      */
     public static function cookieDelete($name)
     {
-        if (isset(Yii::app()->getRequest()->cookies[$name])) {
-            unset(Yii::app()->getRequest()->cookies[$name]);
+        $request = Yii::app()->getComponent('request');
+
+        if (isset($request->cookies[$name])) {
+            unset($request->cookies[$name]);
         }
     }
 
     /**
      * Возвращает значение куки, если оно есть, иначе значение $default
      * @param string $name Имя куки
-     * @param mixed $default Значение, возвращаемое в случае отсутствия куки с заданным именем
-     * Этот параметр появился с версии 1.1.0
+     * @param mixed $default Значение, возвращаемое в случае отсутствия куки с заданным именем (@sinse 1.1.0)
      * @return mixed
      */
     public static function cookieGet($name, $default = null)
     {
-        if (isset(Yii::app()->getRequest()->cookies[$name])) {
-            return Yii::app()->getRequest()->cookies[$name]->value;
+        $request = Yii::app()->getComponent('request');
+
+        if (isset($request->cookies[$name])) {
+            return $request->cookies[$name]->value;
         }
 
         return $default;
@@ -154,7 +213,7 @@ class Y
         $cookie->expire = ($expire ? $expire : 0) + time();
         $cookie->path = $path ? $path : '';
         $cookie->domain = $domain ? $domain : '';
-        Yii::app()->getRequest()->cookies[$name] = $cookie;
+        Yii::app()->getComponent('request')->cookies[$name] = $cookie;
     }
 
     /**
@@ -163,7 +222,7 @@ class Y
      */
     public static function csrf()
     {
-        return Yii::app()->getRequest()->getCsrfToken();
+        return Yii::app()->getComponent('request')->getCsrfToken();
     }
 
     /**
@@ -172,7 +231,7 @@ class Y
      */
     public static function csrfName()
     {
-        return Yii::app()->getRequest()->csrfTokenName;
+        return Yii::app()->getComponent('request')->csrfTokenName;
     }
 
     /**
@@ -187,7 +246,9 @@ class Y
      */
     public static function csrfJsParam()
     {
-        return Yii::app()->getRequest()->csrfTokenName . ":'" . Yii::app()->getRequest()->getCsrfToken() . "'";
+        $request = Yii::app()->getComponent('request');
+
+        return $request->csrfTokenName . ":'" . $request->getCsrfToken() . "'";
     }
 
     /**
@@ -219,21 +280,41 @@ class Y
     /**
      * Выводит данные в формате JSON и завершает приложение (применяется в ajax-действиях)
      * @param mixed $data Данные для вывода
+     * @param int $options JSON опции (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
+     * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@sinse 1.1.3)
      */
-    public static function endJson($data)
+    public static function endJson($data, $options = 0)
     {
-        echo json_encode($data);
+        echo json_encode($data, $options);
         Yii::app()->end();
     }
 
     /**
-     * Устанавливает флэш-извещение для юзера
+     * Устанавливает/возвращает флэш-извещение для юзера
      * @param string $key Ключ извещения
-     * @param string $msg Сообщение извещения
+     * @param string $msg Сообщение извещения или null, чтобы получить сообщение
+     * @return string
      */
-    public static function flash($key, $msg)
+    public static function flash($key, $msg = null)
     {
-        Yii::app()->user->setFlash($key, $msg);
+        $user = Yii::app()->getComponent('user');
+
+        if ($msg === null) {
+            return $user->getFlash($key);
+        } else {
+            $user->setFlash($key, $msg);
+        }
+    }
+
+    /**
+     * Возвращает true, если у юзера есть флэш-извещение с указанных ключом, иначе false
+     * @param string $key
+     * @return bool
+     * @sinse 1.1.2
+     */
+    public static function hasFlash($key)
+    {
+        return Yii::app()->getComponent('user')->hasFlash($key);
     }
 
     /**
@@ -245,8 +326,8 @@ class Y
      */
     public static function flashRedir($key, $msg, $route, $params = array())
     {
-        Yii::app()->user->setFlash($key, $msg);
-        Yii::app()->getRequest()->redirect(self::url($route, $params));
+        Yii::app()->getComponent('user')->setFlash($key, $msg);
+        Yii::app()->getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
@@ -257,7 +338,7 @@ class Y
      */
     public static function hasAccess($roleName)
     {
-        return Yii::app()->user->checkAccess($roleName);
+        return Yii::app()->getComponent('user')->checkAccess($roleName);
     }
 
     /**
@@ -266,7 +347,7 @@ class Y
      */
     public static function isAuthed()
     {
-        return !Yii::app()->user->getIsGuest();
+        return !Yii::app()->getComponent('user')->getIsGuest();
     }
 
     /**
@@ -275,41 +356,19 @@ class Y
      */
     public static function isGuest()
     {
-        return Yii::app()->user->getIsGuest();
+        return Yii::app()->getComponent('user')->getIsGuest();
     }
 
     /**
      * Возвращает пользовательский параметр приложения
      * @param string $key Ключ параметра или ключи вложенных параметров через точку
-     * 'Media.Foto.thumbsize' преобразуется в ['Media']['Foto']['thumbsize']
-     * @param mixed $default Значение, возвращаемое в случае отсутствия параметра
+     * Например, 'Media.Foto.thumbsize' преобразуется в ['Media']['Foto']['thumbsize']
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия ключа
      * @return mixed
      */
-    public static function param($key, $default = null)
+    public static function param($key, $defaultValue = null)
     {
-        $params = Yii::app()->getParams();
-
-        if (strpos($key, '.') === false) {
-            return ($params->contains($key)) ? $params->itemAt($key) : $default;
-        }
-
-        $keys = explode('.', $key);
-
-        if (!$params->contains($keys[0])) {
-            return $default;
-        }
-
-        $param = $params->itemAt($keys[0]);
-        unset($keys[0]);
-
-        foreach ($keys as $k) {
-            if (!isset($param[$k]) && !array_key_exists($k, $param)) {
-                return $default;
-            }
-            $param = $param[$k];
-        }
-
-        return $param;
+        return self::_getValueByComplexKeyFromArray($key, Yii::app()->getParams(), $defaultValue);
     }
 
     /**
@@ -319,7 +378,7 @@ class Y
      */
     public static function redir($route, $params = array())
     {
-        Yii::app()->getRequest()->redirect(self::url($route, $params));
+        Yii::app()->getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
@@ -329,8 +388,8 @@ class Y
      */
     public static function redirAuthed($route, $params = array())
     {
-        if (!Yii::app()->user->getIsGuest()) {
-            Yii::app()->getRequest()->redirect(self::url($route, $params));
+        if (!Yii::app()->getComponent('user')->getIsGuest()) {
+            Yii::app()->getComponent('request')->redirect(self::url($route, $params));
         }
     }
 
@@ -341,8 +400,8 @@ class Y
      */
     public static function redirGuest($route, $params = array())
     {
-        if (Yii::app()->user->getIsGuest()) {
-            Yii::app()->getRequest()->redirect(self::url($route, $params));
+        if (Yii::app()->getComponent('user')->getIsGuest()) {
+            Yii::app()->getComponent('request')->redirect(self::url($route, $params));
         }
     }
 
@@ -352,7 +411,7 @@ class Y
      */
     public static function request()
     {
-        return Yii::app()->getRequest();
+        return Yii::app()->getComponent('request');
     }
 
     /**
@@ -369,8 +428,9 @@ class Y
             $stats = 'Выполнено запросов: ' . $dbStats[0] . ' (за ' . round($dbStats[1], 5) . ' сек.)<br />';
         }
 
-        $memory = round(Yii::getLogger()->getMemoryUsage() / 1048576, 3);
-        $time = round(Yii::getLogger()->getExecutionTime(), 3);
+        $logger = Yii::getLogger();
+        $memory = round($logger->getMemoryUsage() / 1048576, 3);
+        $time = round($logger->getExecutionTime(), 3);
 
         $stats .= 'Использовано памяти: ' . $memory . ' Мб<br />';
         $stats .= 'Время выполнения: ' . $time . ' сек.';
@@ -399,11 +459,11 @@ class Y
 
     /**
      * Возвращает ссылку на user-компонент приложения
-     * @return IWebUser
+     * @return CWebUser
      */
     public static function user()
     {
-        return Yii::app()->user;
+        return Yii::app()->getComponent('user');
     }
 
     /**
@@ -412,6 +472,39 @@ class Y
      */
     public static function userId()
     {
-        return Yii::app()->user->getId();
+        return Yii::app()->getComponent('user')->getId();
+    }
+
+    /**
+     * Возвращает значения ключа в заданном массиве
+     * @param string $key Ключ или ключи точку
+     * Например, 'Media.Foto.thumbsize' преобразуется в ['Media']['Foto']['thumbsize']
+     * @param array $array Массив значений
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия ключа
+     * @return mixed
+     */
+    private static function  _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
+    {
+        if (strpos($key, '.') === false) {
+            return (isset($array[$key])) ? $array[$key] : $defaultValue;
+        }
+
+        $keys = explode('.', $key);
+
+        if (!isset($array[$keys[0]])) {
+            return $defaultValue;
+        }
+
+        $value = $array[$keys[0]];
+        unset($keys[0]);
+
+        foreach ($keys as $k) {
+            if (!isset($value[$k]) && !array_key_exists($k, $value)) {
+                return $defaultValue;
+            }
+            $value = $value[$k];
+        }
+
+        return $value;
     }
 }

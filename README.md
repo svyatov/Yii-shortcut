@@ -129,6 +129,16 @@ if (Y::isAuthed()) ... // авторизован
 
 ## История
 
+* **v1.1.3** / 19.07.2011
+
+    `new` Добавлены методы: getGet, getPost, getRequest, getPdo, hasFlash.
+
+    `chg` В методы cache, cacheDelete, cacheGet, cacheSet добавлен параметр $cacheId, который позволяет указать произвольный кэш-компонент, а не только 'cache'.
+
+    `chg' В метода endJson добавлен параметр $options, который позволяет передавать флаги функции json_encode.
+
+    `chg' Убрано еще больше "магии", слегка оптимизированы некоторые методы.
+
 * **v1.1.0** / 29.05.2011
 
     `new` Добавлены методы: isAjaxRequest, isPutRequest, isDeleteRequest, isPostRequest, isSecureConnection.
