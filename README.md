@@ -5,7 +5,7 @@
 
 ## Получение
 
-`git clone git://github.com/Svyatov/Yii-Shortcut.git`
+`git clone git://github.com/Svyatov/Yii-shortcut.git`
 
 
 ## Использование
@@ -20,6 +20,7 @@
 1) в виджете нам нужно создать урл по роуту
 
 ```php
+<?php
 // стандартная запись
 Yii::app()->controller->createUrl(...);
 
@@ -30,6 +31,7 @@ Y::url(...);
 2) достаем/устанавлием значение какого-то кэша
 
 ```php
+<?php
 // стандартная запись
 Yii::app()->cache->get(...);
 Yii::app()->cache->set(...);
@@ -44,6 +46,7 @@ Y::cacheSet(...);
 4) достаем значение CSRF токена для вставки в форму или для ajax-запроса
 
 ```php
+<?php
 // стандартная запись
 Yii::app()->request->csrfToken;
 
@@ -53,7 +56,7 @@ Y::csrf();
 
 5) надо передать параметр CSRF в ajax-запросе jQuery?
 
-```php
+```phtml
 // стандартная запись
 <script>
 $.post('/bla/bla', {<?=Yii::app()->request->csrfTokenName;?>: '<?=Yii::app()->request->csrfToken;?>', ...} ... );
@@ -68,6 +71,7 @@ $.post('/bla/bla', {<?=Y::csrfJsParam();?>, ...} ... );
 6) быстрый дамп с подсветкой:
 
 ```php
+<?php
 // стандартная запись
 echo '<pre>';
 CVarDumper::dump(...);
@@ -80,6 +84,7 @@ Y::dump(...);
 7) выводим результат действия для ajax-запроса
 
 ```php
+<?php
 // стандартная запись
 echo $result;
 Yii::app()->end();
@@ -96,6 +101,7 @@ Y::endJson($result);
 8) редиректы
 
 ```php
+<?php
 // стандартная запись
 $this->redirect($this->createUrl(...)); // самая короткая запись
 Yii::app()->request->redirect(Yii::app()->controller->createUrl(...)); // а это для компонента, например
@@ -107,6 +113,7 @@ Y::redir(...); // можно использовать в любом мес
 9) определение статуса текущего юзера (авторизован или нет)
 
 ```php
+<?php
 // стандартная запись
 if (Yii::app()->user->isGuest) ... // если гость
 // или
