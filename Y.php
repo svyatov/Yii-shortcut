@@ -5,8 +5,8 @@
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2011, Leonid Svyatov
  * @license http://www.yiiframework.com/license/
- * @version 1.1.3 / 16.07.2011
- * @link http://github.com/Svyatov/Yii-Shortcut
+ * @version 1.1.4 / 27.09.2011
+ * @link http://github.com/Svyatov/Yii-shortcut
  */
 class Y
 {
@@ -175,11 +175,7 @@ class Y
      */
     public static function cookieDelete($name)
     {
-        $request = Yii::app()->getComponent('request');
-
-        if (isset($request->cookies[$name])) {
-            unset($request->cookies[$name]);
-        }
+        Yii::app()->getComponent('request')->getCookies()->remove($name);
     }
 
     /**
@@ -190,10 +186,10 @@ class Y
      */
     public static function cookieGet($name, $default = null)
     {
-        $request = Yii::app()->getComponent('request');
+        $cookie = Yii::app()->getComponent('request')->getCookies()->itemAt($name);
 
-        if (isset($request->cookies[$name])) {
-            return $request->cookies[$name]->value;
+        if ($cookie) {
+            return $cookie->value;
         }
 
         return $default;
@@ -210,10 +206,10 @@ class Y
     public static function cookieSet($name, $value, $expire = null, $path = '/', $domain = null)
     {
         $cookie = new CHttpCookie($name, $value);
-        $cookie->expire = ($expire ? $expire : 0) + time();
+        $cookie->expire = $expire ? ($expire + time()) : 0;
         $cookie->path = $path ? $path : '';
         $cookie->domain = $domain ? $domain : '';
-        Yii::app()->getComponent('request')->cookies[$name] = $cookie;
+        Yii::app()->getComponent('request')->getCookies()->add($name, $cookie);
     }
 
     /**
@@ -483,7 +479,7 @@ class Y
      * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия ключа
      * @return mixed
      */
-    private static function  _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
+    private static function _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
     {
         if (strpos($key, '.') === false) {
             return (isset($array[$key])) ? $array[$key] : $defaultValue;
