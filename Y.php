@@ -5,11 +5,25 @@
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2011, Leonid Svyatov
  * @license http://www.yiiframework.com/license/
- * @version 1.1.4 / 27.09.2011
+ * @version 1.1.5 / 29.09.2011
  * @link http://github.com/Svyatov/Yii-shortcut
  */
 class Y
 {
+    /**
+     * Создает и возвращает команду БД для исполнения
+     * Можно использовать как для обращения к построителю запросов, так и для непосредственного выполнения SQL строки
+     * @param string|array $query Строка SQL или массив частей запроса (смотри {@link CDbCommand::__construct}),
+     * если аргумент не указан, то далее необходимо вызывать методы построителя запросов {@link CDbCommand}
+     * @param string $dbId ID компонента базы данных, по умолчанию - 'db'
+     * @return CDbCommand
+     * @since 1.1.5
+     */
+    public static function dbCmd($query = null, $dbId = 'db')
+    {
+        return Yii::app()->getComponent($dbId)->createCommand($query);
+    }
+
     /**
      * Возвращает значение параметра $name из глобального GET-массива
      * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
@@ -17,7 +31,7 @@ class Y
      * Например, запрос значения параметра 'Post.post_text' будет искаться в $_GET['Post']['post_text']
      * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
      * @return mixed
-     * @sinse 1.1.2
+     * @since 1.1.2
      */
     public static function getGet($name, $defaultValue = null)
     {
@@ -31,7 +45,7 @@ class Y
      * Например, запрос значения параметра 'Post.post_text' будет искаться в $_POST['Post']['post_text']
      * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
      * @return mixed
-     * @sinse 1.1.2
+     * @since 1.1.2
      */
     public static function getPost($name, $defaultValue = null)
     {
@@ -45,7 +59,7 @@ class Y
      * Например, запрос значения параметра 'Post.post_text' будет искаться в $_REQUEST['Post']['post_text']
      * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
      * @return mixed
-     * @sinse 1.1.2
+     * @since 1.1.2
      */
     public static function getRequest($name, $defaultValue = null)
     {
@@ -56,7 +70,7 @@ class Y
      * Возвращает объект PDO
      * @param string $dbId ID компонента базы данных
      * @return \PDO
-     * @sinse 1.1.3
+     * @since 1.1.3
      */
     public static function getPdo($dbId = 'db')
     {
@@ -76,7 +90,7 @@ class Y
     /**
      * Возвращает true, если текущее соединение является защищенным (HTTPS), иначе false
      * @return bool
-     * @sinse 1.1.0
+     * @since 1.1.0
      */
     public static function isSecureConnection()
     {
@@ -125,7 +139,7 @@ class Y
 
     /**
      * Возвращает ссылку на cache-компонент приложения
-     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
+     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
      * @return ICache
      */
     public static function cache($cacheId = 'cache')
@@ -136,7 +150,7 @@ class Y
     /**
      * Удаляет кэш с ключом $id
      * @param string $id Имя ключа
-     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
+     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
      * @return boolean
      */
     public static function cacheDelete($id, $cacheId = 'cache')
@@ -147,7 +161,7 @@ class Y
     /**
      * Возвращает значение кэша с ключом $id
      * @param string $id Имя ключа
-     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
+     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
      * @return mixed
      */
     public static function cacheGet($id, $cacheId = 'cache')
@@ -161,7 +175,7 @@ class Y
      * @param mixed $value Значение ключа
      * @param integer $expire Время хранения в секундах
      * @param ICacheDependency $dependency Смотри {@link ICacheDependency}
-     * @param string $cacheId ID кэш-компонента (@sinse 1.1.3)
+     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
      * @return boolean
      */
     public static function cacheSet($id, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
@@ -181,7 +195,7 @@ class Y
     /**
      * Возвращает значение куки, если оно есть, иначе значение $default
      * @param string $name Имя куки
-     * @param mixed $default Значение, возвращаемое в случае отсутствия куки с заданным именем (@sinse 1.1.0)
+     * @param mixed $default Значение, возвращаемое в случае отсутствия куки с заданным именем (@since 1.1.0)
      * @return mixed
      */
     public static function cookieGet($name, $default = null)
@@ -277,7 +291,7 @@ class Y
      * Выводит данные в формате JSON и завершает приложение (применяется в ajax-действиях)
      * @param mixed $data Данные для вывода
      * @param int $options JSON опции (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
-     * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@sinse 1.1.3)
+     * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@since 1.1.3)
      */
     public static function endJson($data, $options = 0)
     {
@@ -306,7 +320,7 @@ class Y
      * Возвращает true, если у юзера есть флэш-извещение с указанных ключом, иначе false
      * @param string $key
      * @return bool
-     * @sinse 1.1.2
+     * @since 1.1.2
      */
     public static function hasFlash($key)
     {
