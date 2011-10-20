@@ -5,11 +5,81 @@
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2011, Leonid Svyatov
  * @license http://www.yiiframework.com/license/
- * @version 1.1.5 / 29.09.2011
+ * @version 1.2.0 / 20.10.2011
  * @link http://github.com/Svyatov/Yii-shortcut
  */
 class Y
 {
+    /**
+     * @var array Кэш компонентов приложения
+     * @since 1.2.0
+     */
+    private static $_componentsCache = array();
+
+    /**
+     * Возвращает format-компонент приложения
+     * @return CFormatter
+     * @since 1.2.0
+     */
+    public static function format()
+    {
+        return self::_getComponent('format');
+    }
+
+    /**
+     * Возвращает clientScript-компонент приложения
+     * @return CClientScript
+     * @since 1.2.0
+     */
+    public static function script()
+    {
+        return self::_getComponent('clientScript');
+    }
+
+    /**
+     * Возвращает session-компонент приложения
+     * @return CHttpSession
+     * @since 1.2.0
+     */
+    public static function session()
+    {
+        return self::_getComponent('session');
+    }
+
+    /**
+     * Удаляет переменную сессии
+     * @param string $key Имя переменной
+     * @return mixed Удаленное значение переменной или null, если такой переменной не найдено
+     * @since 1.2.0
+     */
+    public static function sessionDelete($key)
+    {
+        return self::_getComponent('session')->remove($key);
+    }
+
+    /**
+     * Возвращает переменную сессии
+     * @param string $key Имя переменной
+     * @param mixed $defaultValue Значение, возвращаемое если переменная не найдена
+     * @return mixed
+     * @since 1.2.0
+     */
+    public static function sessionGet($key, $defaultValue = null)
+    {
+        return self::_getComponent('session')->get($key, $defaultValue);
+    }
+
+    /**
+     * Устанавливает значение переменной сессии
+     * @param string $key Имя переменной
+     * @param mixed $value Значение переменной
+     * @since 1.2.0
+     */
+    public static function sessionSet($key, $value)
+    {
+        self::_getComponent('session')->add($key, $value);
+    }
+
     /**
      * Создает и возвращает команду БД для исполнения
      * Можно использовать как для обращения к построителю запросов, так и для непосредственного выполнения SQL строки
@@ -21,7 +91,7 @@ class Y
      */
     public static function dbCmd($query = null, $dbId = 'db')
     {
-        return Yii::app()->getComponent($dbId)->createCommand($query);
+        return self::_getComponent($dbId)->createCommand($query);
     }
 
     /**
@@ -74,7 +144,7 @@ class Y
      */
     public static function getPdo($dbId = 'db')
     {
-        return Yii::app()->getComponent($dbId)->getPdoInstance();
+        return self::_getComponent($dbId)->getPdoInstance();
     }
 
     /**
@@ -84,7 +154,7 @@ class Y
      */
     public static function baseUrl($absolute = false)
     {
-        return Yii::app()->getComponent('request')->getBaseUrl($absolute);
+        return self::_getComponent('request')->getBaseUrl($absolute);
     }
 
     /**
@@ -94,7 +164,7 @@ class Y
      */
     public static function isSecureConnection()
     {
-        return Yii::app()->getComponent('request')->getIsSecureConnection();
+        return self::_getComponent('request')->getIsSecureConnection();
     }
 
     /**
@@ -104,7 +174,7 @@ class Y
      */
     public static function isAjaxRequest()
     {
-        return Yii::app()->getComponent('request')->getIsAjaxRequest();
+        return self::_getComponent('request')->getIsAjaxRequest();
     }
 
     /**
@@ -114,7 +184,7 @@ class Y
      */
     public static function isPutRequest()
     {
-        return Yii::app()->getComponent('request')->getIsPutRequest();
+        return self::_getComponent('request')->getIsPutRequest();
     }
 
     /**
@@ -124,7 +194,7 @@ class Y
      */
     public static function isDeleteRequest()
     {
-        return Yii::app()->getComponent('request')->getIsDeleteRequest();
+        return self::_getComponent('request')->getIsDeleteRequest();
     }
 
     /**
@@ -134,17 +204,17 @@ class Y
      */
     public static function isPostRequest()
     {
-        return Yii::app()->getComponent('request')->getIsPostRequest();
+        return self::_getComponent('request')->getIsPostRequest();
     }
 
     /**
-     * Возвращает ссылку на cache-компонент приложения
+     * Возвращает cache-компонент приложения
      * @param string $cacheId ID кэш-компонента (@since 1.1.3)
      * @return ICache
      */
     public static function cache($cacheId = 'cache')
     {
-        return Yii::app()->getComponent($cacheId);
+        return self::_getComponent($cacheId);
     }
 
     /**
@@ -155,7 +225,7 @@ class Y
      */
     public static function cacheDelete($id, $cacheId = 'cache')
     {
-        return Yii::app()->getComponent($cacheId)->delete($id);
+        return self::_getComponent($cacheId)->delete($id);
     }
 
     /**
@@ -166,7 +236,7 @@ class Y
      */
     public static function cacheGet($id, $cacheId = 'cache')
     {
-        return Yii::app()->getComponent($cacheId)->get($id);
+        return self::_getComponent($cacheId)->get($id);
     }
 
     /**
@@ -180,33 +250,34 @@ class Y
      */
     public static function cacheSet($id, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
     {
-        return Yii::app()->getComponent($cacheId)->set($id, $value, $expire, $dependency);
+        return self::_getComponent($cacheId)->set($id, $value, $expire, $dependency);
     }
 
     /**
      * Удаляет куку
      * @param string $name Имя куки
+     * @return CHttpCookie|null Объект удаленной куки или null, если куки с таким именем нет
      */
     public static function cookieDelete($name)
     {
-        Yii::app()->getComponent('request')->getCookies()->remove($name);
+        return self::_getComponent('request')->getCookies()->remove($name);
     }
 
     /**
-     * Возвращает значение куки, если оно есть, иначе значение $default
+     * Возвращает значение куки, если оно есть, иначе значение $defaultValue
      * @param string $name Имя куки
-     * @param mixed $default Значение, возвращаемое в случае отсутствия куки с заданным именем (@since 1.1.0)
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия куки с заданным именем (@since 1.1.0)
      * @return mixed
      */
-    public static function cookieGet($name, $default = null)
+    public static function cookieGet($name, $defaultValue = null)
     {
-        $cookie = Yii::app()->getComponent('request')->getCookies()->itemAt($name);
+        $cookie = self::_getComponent('request')->getCookies()->itemAt($name);
 
         if ($cookie) {
             return $cookie->value;
         }
 
-        return $default;
+        return $defaultValue;
     }
 
     /**
@@ -223,7 +294,7 @@ class Y
         $cookie->expire = $expire ? ($expire + time()) : 0;
         $cookie->path = $path ? $path : '';
         $cookie->domain = $domain ? $domain : '';
-        Yii::app()->getComponent('request')->getCookies()->add($name, $cookie);
+        self::_getComponent('request')->getCookies()->add($name, $cookie);
     }
 
     /**
@@ -232,7 +303,7 @@ class Y
      */
     public static function csrf()
     {
-        return Yii::app()->getComponent('request')->getCsrfToken();
+        return self::_getComponent('request')->getCsrfToken();
     }
 
     /**
@@ -241,7 +312,7 @@ class Y
      */
     public static function csrfName()
     {
-        return Yii::app()->getComponent('request')->csrfTokenName;
+        return self::_getComponent('request')->csrfTokenName;
     }
 
     /**
@@ -256,7 +327,7 @@ class Y
      */
     public static function csrfJsParam()
     {
-        $request = Yii::app()->getComponent('request');
+        $request = self::_getComponent('request');
 
         return $request->csrfTokenName . ":'" . $request->getCsrfToken() . "'";
     }
@@ -307,7 +378,7 @@ class Y
      */
     public static function flash($key, $msg = null)
     {
-        $user = Yii::app()->getComponent('user');
+        $user = self::_getComponent('user');
 
         if ($msg === null) {
             return $user->getFlash($key);
@@ -324,7 +395,7 @@ class Y
      */
     public static function hasFlash($key)
     {
-        return Yii::app()->getComponent('user')->hasFlash($key);
+        return self::_getComponent('user')->hasFlash($key);
     }
 
     /**
@@ -336,8 +407,8 @@ class Y
      */
     public static function flashRedir($key, $msg, $route, $params = array())
     {
-        Yii::app()->getComponent('user')->setFlash($key, $msg);
-        Yii::app()->getComponent('request')->redirect(self::url($route, $params));
+        self::_getComponent('user')->setFlash($key, $msg);
+        self::_getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
@@ -348,7 +419,7 @@ class Y
      */
     public static function hasAccess($roleName)
     {
-        return Yii::app()->getComponent('user')->checkAccess($roleName);
+        return self::_getComponent('user')->checkAccess($roleName);
     }
 
     /**
@@ -357,7 +428,7 @@ class Y
      */
     public static function isAuthed()
     {
-        return !Yii::app()->getComponent('user')->getIsGuest();
+        return !self::_getComponent('user')->getIsGuest();
     }
 
     /**
@@ -366,7 +437,7 @@ class Y
      */
     public static function isGuest()
     {
-        return Yii::app()->getComponent('user')->getIsGuest();
+        return self::_getComponent('user')->getIsGuest();
     }
 
     /**
@@ -388,7 +459,7 @@ class Y
      */
     public static function redir($route, $params = array())
     {
-        Yii::app()->getComponent('request')->redirect(self::url($route, $params));
+        self::_getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
@@ -398,8 +469,8 @@ class Y
      */
     public static function redirAuthed($route, $params = array())
     {
-        if (!Yii::app()->getComponent('user')->getIsGuest()) {
-            Yii::app()->getComponent('request')->redirect(self::url($route, $params));
+        if (!self::_getComponent('user')->getIsGuest()) {
+            self::_getComponent('request')->redirect(self::url($route, $params));
         }
     }
 
@@ -410,18 +481,18 @@ class Y
      */
     public static function redirGuest($route, $params = array())
     {
-        if (Yii::app()->getComponent('user')->getIsGuest()) {
-            Yii::app()->getComponent('request')->redirect(self::url($route, $params));
+        if (self::_getComponent('user')->getIsGuest()) {
+            self::_getComponent('request')->redirect(self::url($route, $params));
         }
     }
 
     /**
-     * Возвращает ссылку на request-компонент приложения
+     * Возвращает request-компонент приложения
      * @return CHttpRequest
      */
     public static function request()
     {
-        return Yii::app()->getComponent('request');
+        return self::_getComponent('request');
     }
 
     /**
@@ -468,12 +539,12 @@ class Y
     }
 
     /**
-     * Возвращает ссылку на user-компонент приложения
+     * Возвращает user-компонент приложения
      * @return CWebUser
      */
     public static function user()
     {
-        return Yii::app()->getComponent('user');
+        return self::_getComponent('user');
     }
 
     /**
@@ -482,7 +553,23 @@ class Y
      */
     public static function userId()
     {
-        return Yii::app()->getComponent('user')->getId();
+        return self::_getComponent('user')->getId();
+    }
+
+    /**
+     * Возвращает компонтент приложения
+     * Экономит лишние вызовы методов для получения компонентов путем кэширования компонентов
+     * @param string $componentName Имя компонента приложения
+     * @return CComponent
+     * @since 1.2.0
+     */
+    private static function _getComponent($componentName)
+    {
+        if (!isset(self::$_componentsCache[$componentName])) {
+            self::$_componentsCache[$componentName] = Yii::app()->getComponent($componentName);
+        }
+
+        return self::$_componentsCache[$componentName];
     }
 
     /**
