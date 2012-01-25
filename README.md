@@ -136,6 +136,10 @@ if (Y::isAuthed()) ... // авторизован
 
 ## История
 
+* **v1.2.1** / 25.01.2012
+
+    `new` Добавлен метод getFile.
+
 * **v1.2.0** / 20.10.2011
 
     `new` Добавлены методы: format, script, session, sessionGet, sessionSet, sessionDelete.

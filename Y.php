@@ -5,7 +5,7 @@
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2011, Leonid Svyatov
  * @license http://www.yiiframework.com/license/
- * @version 1.2.0 / 20.10.2011
+ * @version 1.2.1 / 25.01.2012
  * @link http://github.com/Svyatov/Yii-shortcut
  */
 class Y
@@ -134,6 +134,20 @@ class Y
     public static function getRequest($name, $defaultValue = null)
     {
         return self::_getValueByComplexKeyFromArray($name, $_REQUEST, $defaultValue);
+    }
+
+    /**
+     * Возвращает значение параметра $name из глобального FILES-массива
+     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
+     * @param $name Имя параметра или вложенных параметров через точку
+     * Например, запрос значения параметра 'userfile.name' будет искаться в $_FILES['userfile']['name']
+     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * @return mixed
+     * @since 1.2.1
+     */
+    public static function getFile($name, $defaultValue = null)
+    {
+        return self::_getValueByComplexKeyFromArray($name, $_FILES, $defaultValue);
     }
 
     /**
