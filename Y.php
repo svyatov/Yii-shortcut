@@ -373,14 +373,25 @@ class Y
     }
 
     /**
-     * Выводит данные в формате JSON и завершает приложение (применяется в ajax-действиях)
+     * Выводит данные в формате JSON / JSONP и завершает приложение (применяется в ajax-действиях)
      * @param mixed $data Данные для вывода
      * @param int $options JSON опции (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
      * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@since 1.1.3)
+     * Поддерживается только при наличии функции json_encode
+     * @param string $callback Имя callback-функции для JSONP-ответа
      */
-    public static function endJson($data, $options = 0)
+    public static function endJson($data, $options = 0, $callback = '')
     {
-        echo json_encode($data, $options);
+        $result = function_exists('json_encode') ? json_encode($data, $options) : CJSON::encode($data);
+
+        if ($callback) {
+            header('Content-Type: application/javascript;');
+            echo $callback . '(' . $result . ');';
+        } else {
+            header('Content-Type: application/json;');
+            echo $result;
+        }
+
         Yii::app()->end();
     }
 
