@@ -377,19 +377,22 @@ class Y
      * @param mixed $data Данные для вывода
      * @param int $options JSON опции (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
      * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@since 1.1.3)
-     * @param mixed $callback Callback функция при JSONP запросах
+     * Поддерживается только при наличии функции json_encode
+     * @param string $callback Имя callback-функции для JSONP-ответа
      */
-    public static function endJson($data, $options = 0, $callback = false)
+    public static function endJson($data, $options = 0, $callback = '')
     {
-        header('content-type: application/json; charset=utf-8');
+        $result = function_exists('json_encode') ? json_encode($data, $options) : CJSON::encode($data);
 
-        if($callback) {
-            echo $callback . '(' . (function_exists('json_encode') ? json_encode($data, $options) : CJSON::encode($data)) . ');';
+        if ($callback) {
+            header('Content-Type: application/javascript;');
+            echo $callback . '(' . $result . ');';
         } else {
-            echo function_exists('json_encode') ? json_encode($data, $options) : CJSON::encode($data);
+            header('Content-Type: application/json;');
+            echo $result;
         }
 
-        exit();
+        Yii::app()->end();
     }
 
     /**
