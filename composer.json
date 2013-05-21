@@ -1,0 +1,19 @@
+{
+    "name": "svyatov/yii-shortcut",
+    "type": "library",
+    "description": "Shortcuts for Yii framework",
+    "keywords": ["yii","shortcut"],
+    "homepage": "https://github.com/Svyatov/Yii-shortcut",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Leonid Svyatov",
+            "email": "leonid@svyatov.ru",
+            "homepage": "http://svyatov.ru",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
