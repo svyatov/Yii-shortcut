@@ -1,203 +1,213 @@
 # Y
 
-Класс-ярлык для часто употребляемых выражений [Yii framework](http://www.yiiframework.com)
+Shortcuts for [Yii framework](http://www.yiiframework.com)
 
 
-## Получение
+## Install
 
-`git clone git://github.com/Svyatov/Yii-shortcut.git`
+Install it via [Composer](http://getcomposer.org).
 
-
-## Использование
-
-### Установка
-
-Положите файл `Y.php` в папку `protected/components` вашего приложения.
+Or get the [latest release](https://github.com/Svyatov/Yii-shortcut/releases) and put `Y.php` file in your application `protected/components` folder.
 
 
-### Применение
+## Usage
 
-1) в виджете нам нужно создать урл по роуту
+1) creating URL by route in a widget
 
 ```php
 <?php
-// стандартная запись
-Yii::app()->controller->createUrl(...);
+// Standart code
+Yii::app()->controller->createUrl('user/login');
 
-// мой класс
-Y::url(...);
+// Y code
+Y::url('user/login');
 ```
 
-2) достаем/устанавлием значение какого-то кэша
+2) Get/set some cache value
 
 ```php
 <?php
-// стандартная запись
-Yii::app()->cache->get(...);
-Yii::app()->cache->set(...);
+// Standart code
+Yii::app()->cache->get('user_settings');
+Yii::app()->cache->set('user_settings', $userSettings);
 
-// мой класс
-Y::cacheGet(...);
-Y::cacheSet(...);
+// Y code
+Y::cacheGet('user_settings');
+Y::cacheSet('user_settings', $userSettings);
 ```
 
-3) с куками аналогично;
+3) the same with cookies;
 
-4) достаем значение CSRF токена для вставки в форму или для ajax-запроса
+4) getting the value of CSRF token
 
 ```php
 <?php
-// стандартная запись
+// Standart code
 Yii::app()->request->csrfToken;
 
-// мой класс
+// Y code
 Y::csrf();
 ```
 
-5) надо передать параметр CSRF в ajax-запросе jQuery?
+5) inserting CSRF name and token in some jQuery request
 
 ```phtml
-// стандартная запись
+// Standart code
 <script>
-$.post('/bla/bla', {<?=Yii::app()->request->csrfTokenName;?>: '<?=Yii::app()->request->csrfToken;?>', ...} ... );
+$.post('/user/login', {<?=Yii::app()->request->csrfTokenName;?>: '<?=Yii::app()->request->csrfToken;?>', ...} ...);
 </script>
 
-// мой класс
+// Y code
 <script>
-$.post('/bla/bla', {<?=Y::csrfJsParam();?>, ...} ... );
+$.post('/user/login', {<?=Y::csrfJsParam();?>, ...} ...);
 </script>
 ```
 
-6) быстрый дамп с подсветкой:
+6) quick variable dump with code highlighting
 
 ```php
 <?php
-// стандартная запись
-echo '<pre>';
-CVarDumper::dump(...);
+// Standart code
+echo '<pre>';
+CVarDumper::dump($testVariable, 10, true);
 Yii::app()->end();
 
-// мой класс
-Y::dump(...);
+// Y code
+Y::dump($testVariable);
 ```
 
-7) выводим результат действия для ajax-запроса
+7) short action ending without template rendering (e.g. for AJAX requests)
 
 ```php
 <?php
-// стандартная запись
-echo $result;
+// Standart code
+echo $result;
 Yii::app()->end();
-// или
-echo json_encode($result);
+// or
+echo json_encode($result);
 Yii::app()->end();
 
-// мой класс
+// Y code
 Y::end($result);
-// или соответственно
+// or
 Y::endJson($result);
 ```
 
-8) редиректы
+8) redirects
 
 ```php
 <?php
-// стандартная запись
-$this->redirect($this->createUrl(...)); // самая короткая запись
-Yii::app()->request->redirect(Yii::app()->controller->createUrl(...)); // а это для компонента, например
+// Standart code
+$this->redirect($this->createUrl('user/settings')); // the shortest example
+Yii::app()->request->redirect(Yii::app()->controller->createUrl('user/settings')); // if we inside some widget
 
-// мой класс
-Y::redir(...); // можно использовать в любом месте одинаково
+// Y code
+Y::redir('user/settings'); // you can use wherever you want, controller/widget, it doesn't matter
 ```
 
-9) определение статуса текущего юзера (авторизован или нет)
+9) detecting current user status (is he a guest or he is authenticated)
 
 ```php
 <?php
-// стандартная запись
-if (Yii::app()->user->isGuest) ... // если гость
-// или
-if (!Yii::app()->user->isGuest) ... // если авторизован
+// Standart code
+if (Yii::app()->user->isGuest) {} // is user a guest?
+// or
+if (!Yii::app()->user->isGuest) {} // is user authenticated?
 
-// мой класс
-if (Y::isGuest()) ... // гость
-// или
-if (Y::isAuthed()) ... // авторизован
-// можно было обойтись одним методом, но так код получается нагляднее
+// Y code
+if (Y::isGuest()) {} // is user a guest?
+// or
+if (Y::isAuthed()) {} // is user authenticated?
+// the code speaks for himself, it's more expressive and more readable
 ```
 
-Как видите количество кода сокращается минимум в 2 раза, что соответственно сокращает минимум в 2 раза время на его написание и отладку.
+As you can see, the amount of code becomes at least 2 times smaller. So you need to type 2 times less and you can read and understand it 2 times faster.
 
 
-## Контакты
+## Changelog
 
-Проблемы, предложения, пожелания жду сюда: [leonid@svyatov.ru](mailto:leonid@svyatov.ru)
+* **v1.3.0** / 12.07.2013
 
+    `new` Everything is translated to English.
 
-## История
+    `new` Added LICENSE file.
+
+    `chg` Updated composer.json file.
+
+    `chg` Added second argument $options to cookieDelete() method.
+
+    `chg` Added $secure and $httpOnly arguments to cookieSet() method. Besides, $value argument could be an instance of CHttpCookie class now.
+
+    `chg` CSRF token name in method csrfJsParam() now quoted.
+
+    `chg` Default $message argument value in flash() method changed to 'false' so now there is a way to remove flash message by passing 'null' as $message argument.
+
+    `chg` Added $params and $allowCaching arguments to hasAccess() method. It doesn't change previous behaviour but extending method abilities.
+
+    `chg` Code refactoring.
 
 * **v1.2.1** / 25.01.2012
 
-    `new` Добавлен метод getFile.
+    `new` Added method getFile().
 
 * **v1.2.0** / 20.10.2011
 
-    `new` Добавлены методы: format, script, session, sessionGet, sessionSet, sessionDelete.
+    `new` Added methods: format, script, session, sessionGet, sessionSet, sessionDelete.
 
-    `new` Добавлено внутреннее кэширование вызовов компонентов.
+    `new` Added internal caching of application components.
 
-    `chg` cookieDelete теперь возвращает объект удаленной куки, как и оригинальный метод.
+    `chg` cookieDelete() method now returns the object of removed cookie (like the original method).
 
 * **v1.1.5** / 29.09.2011
 
-    `new` Добавлен метод dbCmd.
+    `new` Added method dbCmd().
 
-    `fix` Исправлены ошибки в phpDoc тэгах @since.
+    `fix` Fixed errors in @since phpDoc tags.
 
 * **v1.1.4** / 27.09.2011
 
-    `fix` Исправлена ошибка, при которой не устанавливалась кука, если в методе cookieSet() был опущен аргумент $expire.
+    `fix` Fixed bug in cookieSet() method, which prevents setting cookie if there was no $expire argument.
 
-    `chg` Методы для работы с cookies теперь "нативнее" используют класс CCookieCollection.
+    `chg` Cookie methods now use native methods of the CCookieCollection class.
 
 * **v1.1.3** / 19.07.2011
 
-    `new` Добавлены методы: getGet, getPost, getRequest, getPdo, hasFlash.
+    `new` Added methods: getGet, getPost, getRequest, getPdo, hasFlash.
 
-    `chg` В методы cache, cacheDelete, cacheGet, cacheSet добавлен параметр $cacheId, который позволяет указать произвольный кэш-компонент, а не только 'cache'.
+    `chg` cache(), cacheDelete(), cacheGet(), cacheSet() methods now have $cacheId argument, which gives the ability to select different cache backends.
 
-    `chg` В метода endJson добавлен параметр $options, который позволяет передавать флаги функции json_encode.
+    `chg` Added $options argument to endJson() method, which gives the ability to pass options to native json_encode() function.
 
-    `chg` Убрано еще больше "магии", слегка оптимизированы некоторые методы.
+    `chg` More "magic" removed. Code refactoring.
 
 * **v1.1.0** / 29.05.2011
 
-    `new` Добавлены методы: isAjaxRequest, isPutRequest, isDeleteRequest, isPostRequest, isSecureConnection.
+    `new` Added methods: isAjaxRequest, isPutRequest, isDeleteRequest, isPostRequest, isSecureConnection.
 
-    `new` В README добавлена история версий. README.markdown переименован в README.md
+    `new` Added changelog to README. README.markdown renamed to README.md
 
-    `chg` Максимально убрана вся "магия" внутри методов.
+    `chg` Removed almost every "magic" inside methods.
 
-    `chg` В метод baseUrl() добавлен параметр $absolute, по умолчанию равный false. Параметр позволяет получить не относительный, а абсолютный URL.
+    `chg` Added $absolute argument to baseUrl() method, which gives the ability to get absolute URL instead of relative one.
 
-    `chg` В метод cookieGet() добавлен параметр $default, по умолчанию равный null. Параметр позволяет вернуть произвольное значение, если куки с указанным именем не существует.
+    `chg` Added $default argument to cookieGet() method, which gives the ability to return value of $default variable if cookie with specified name doesn't exist.
 
-    `chg` В метод param() добавлен параметр $default, по умолчанию равный null. Параметр позволяет вернуть произвольное значение, если параметра приложения с указанным именем не существует. Также переработан код метода.
+    `chg` Added $default argument to param() method, which gives the ability to return value of $default variable if parameter with specified name doesn't exist. Also, method code refactored.
 
-    `chg` Исправлены, улучшены и дополнены phpDoc комментарии.
+    `chg` Fixed and enhanced phpDoc comments.
 
 * **v1.0.4** / 05.01.2011
 
-    Небольшой рефакторинг, класс выложен на GitHub.
+    `chg` Code refactoring. Class uploaded to GitHub.
 
 * **v1.0.3** / 16.12.2010
 
-    `fix` Исправлен баг в функции param().
+    `fix` Fixed bug in param() method.
 
 * **v1.0.2** / 16.12.2010
 
-    `new` Добавлена функция hasAccess().
+    `new` Added method hasAccess().
 
-    `new` Доработана функция param() - теперь поддерживаются вложенные параметры (обращаться к вложенному параметру можно через точку: 'site.title' вернет значение param['site']['title']) - за идею спасибо sergebezborodov.
+    `new` Enhanced method param(). Now key could contain dot delimited string to access nested variables. For example: 'site.title' returns value at param['site']['title']. Thanks for idea to sergebezborodov.
 
-    `chg` Небольшой рефакторинг.
+    `chg` Code refactoring.
