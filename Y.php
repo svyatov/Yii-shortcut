@@ -1,23 +1,22 @@
 <?php
 /**
- * Класс-ярлык для часто употребляемых выражений Yii framework
+ * Shortcuts for Yii framework
  *
  * @author Leonid Svyatov <leonid@svyatov.ru>
- * @copyright Copyright (c) 2010-2011, Leonid Svyatov
- * @license http://www.yiiframework.com/license/
- * @version 1.2.1 / 25.01.2012
+ * @copyright Copyright (c) 2010-2013, Leonid Svyatov
+ * @license BSD-3-Clause
+ * @version 1.3.0 / 12.07.2013
  * @link http://github.com/Svyatov/Yii-shortcut
  */
 class Y
 {
     /**
-     * @var array Кэш компонентов приложения
+     * @var array application components cache
      * @since 1.2.0
      */
     private static $_componentsCache = array();
 
     /**
-     * Возвращает format-компонент приложения
      * @return CFormatter
      * @since 1.2.0
      */
@@ -27,7 +26,6 @@ class Y
     }
 
     /**
-     * Возвращает clientScript-компонент приложения
      * @return CClientScript
      * @since 1.2.0
      */
@@ -37,7 +35,14 @@ class Y
     }
 
     /**
-     * Возвращает session-компонент приложения
+     * @return CHttpRequest
+     */
+    public static function request()
+    {
+        return self::_getComponent('request');
+    }
+
+    /**
      * @return CHttpSession
      * @since 1.2.0
      */
@@ -47,9 +52,9 @@ class Y
     }
 
     /**
-     * Удаляет переменную сессии
-     * @param string $key Имя переменной
-     * @return mixed Удаленное значение переменной или null, если такой переменной не найдено
+     * Removes a session variable
+     * @param string $key the name of the session variable to be removed
+     * @return mixed the removed value, null if no such session variable
      * @since 1.2.0
      */
     public static function sessionDelete($key)
@@ -58,10 +63,10 @@ class Y
     }
 
     /**
-     * Возвращает переменную сессии
-     * @param string $key Имя переменной
-     * @param mixed $defaultValue Значение, возвращаемое если переменная не найдена
-     * @return mixed
+     * Returns the session variable value or $defaultValue if the session variable does not exist
+     * @param string $key the session variable name
+     * @param mixed $defaultValue the default value to be returned when the session variable does not exist
+     * @return mixed the session variable value, or $defaultValue if the session variable does not exist
      * @since 1.2.0
      */
     public static function sessionGet($key, $defaultValue = null)
@@ -70,9 +75,9 @@ class Y
     }
 
     /**
-     * Устанавливает значение переменной сессии
-     * @param string $key Имя переменной
-     * @param mixed $value Значение переменной
+     * Sets a session variable
+     * @param string $key session variable name
+     * @param mixed $value session variable value
      * @since 1.2.0
      */
     public static function sessionSet($key, $value)
@@ -81,11 +86,12 @@ class Y
     }
 
     /**
-     * Создает и возвращает команду БД для исполнения
-     * Можно использовать как для обращения к построителю запросов, так и для непосредственного выполнения SQL строки
-     * @param string|array $query Строка SQL или массив частей запроса (смотри {@link CDbCommand::__construct}),
-     * если аргумент не указан, то далее необходимо вызывать методы построителя запросов {@link CDbCommand}
-     * @param string $dbId ID компонента базы данных, по умолчанию - 'db'
+     * Creates and returns a DB command for execution
+     * @param string|array $query the DB query to be executed. This can be either a string representing a SQL statement,
+     * or an array representing different fragments of a SQL statement. Please refer to {@link CDbCommand::__construct}
+     * for more details about how to pass an array as the query. If this parameter is not given, you will have to call
+     * query builder methods of {@link CDbCommand} to build the DB query.
+     * @param string $dbId ID of the DB component, default value is 'db'
      * @return CDbCommand
      * @since 1.1.5
      */
@@ -95,11 +101,10 @@ class Y
     }
 
     /**
-     * Возвращает значение параметра $name из глобального GET-массива
-     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
-     * @param $name Имя параметра или вложенных параметров через точку
-     * Например, запрос значения параметра 'Post.post_text' будет искаться в $_GET['Post']['post_text']
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * Returns the $_GET variable value or $defaultValue if the $_GET variable does not exist
+     * @param string $name the $_GET variable name (could be used dot delimiter for nested variable)
+     * Example: variable name 'Post.post_text' will return value at $_GET['Post']['post_text']
+     * @param mixed $defaultValue the default value to be returned when the $_GET variable does not exist
      * @return mixed
      * @since 1.1.2
      */
@@ -109,11 +114,10 @@ class Y
     }
 
     /**
-     * Возвращает значение параметра $name из глобального POST-массива
-     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
-     * @param $name Имя параметра или вложенных параметров через точку
-     * Например, запрос значения параметра 'Post.post_text' будет искаться в $_POST['Post']['post_text']
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * Returns the $_POST variable value or $defaultValue if the $_POST variable does not exist
+     * @param string $name the $_POST variable name (could be used dot delimiter for nested variable)
+     * Example: variable name 'Post.post_text' will return value at $_POST['Post']['post_text']
+     * @param mixed $defaultValue the default value to be returned when the $_POST variable does not exist
      * @return mixed
      * @since 1.1.2
      */
@@ -123,11 +127,10 @@ class Y
     }
 
     /**
-     * Возвращает значение параметра $name из глобального REQUEST-массива
-     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
-     * @param $name Имя параметра или вложенных параметров через точку
-     * Например, запрос значения параметра 'Post.post_text' будет искаться в $_REQUEST['Post']['post_text']
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * Returns the $_REQUEST variable value or $defaultValue if the $_REQUEST variable does not exist
+     * @param string $name the $_REQUEST variable name (could be used dot delimiter for nested variable)
+     * Example: variable name 'Post.post_text' will return value at $_REQUEST['Post']['post_text']
+     * @param mixed $defaultValue the default value to be returned when the $_REQUEST variable does not exist
      * @return mixed
      * @since 1.1.2
      */
@@ -137,11 +140,10 @@ class Y
     }
 
     /**
-     * Возвращает значение параметра $name из глобального FILES-массива
-     * Если параметра с таким именем нет, то возвращает значение указанное в $defaultValue
-     * @param $name Имя параметра или вложенных параметров через точку
-     * Например, запрос значения параметра 'userfile.name' будет искаться в $_FILES['userfile']['name']
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия указанного параметра
+     * Returns the $_FILES variable value or $defaultValue if the $_FILES variable does not exist
+     * @param string $name the $_FILES variable name (could be used dot delimiter for nested variable)
+     * Example: variable name 'userfile.name' will return value at $_FILES['userfile']['name']
+     * @param mixed $defaultValue the default value to be returned when the $_FILES variable does not exist
      * @return mixed
      * @since 1.2.1
      */
@@ -151,9 +153,9 @@ class Y
     }
 
     /**
-     * Возвращает объект PDO
-     * @param string $dbId ID компонента базы данных
-     * @return \PDO
+     * Returns the PDO instance
+     * @param string $dbId ID of the DB component, default value is 'db'
+     * @return \PDO the PDO instance, null if the connection is not established yet
      * @since 1.1.3
      */
     public static function getPdo($dbId = 'db')
@@ -162,8 +164,8 @@ class Y
     }
 
     /**
-     * Возвращает относительный URL приложения
-     * @param bool $absolute Вернуть ли абсолютный URL, по умолчанию false (@since 1.1.0)
+     * Returns the relative URL for the application
+     * @param bool $absolute whether to return an absolute URL. Defaults to false, meaning returning a relative one (@since 1.1.0)
      * @return string
      */
     public static function baseUrl($absolute = false)
@@ -172,7 +174,7 @@ class Y
     }
 
     /**
-     * Возвращает true, если текущее соединение является защищенным (HTTPS), иначе false
+     * Return if the request is sent via secure channel (https)
      * @return bool
      * @since 1.1.0
      */
@@ -182,7 +184,7 @@ class Y
     }
 
     /**
-     * Возвращает true, если текущий запрос является Ajax запросом, иначе false
+     * Returns whether this is an AJAX (XMLHttpRequest) request
      * @return bool
      * @since 1.1.0
      */
@@ -192,7 +194,7 @@ class Y
     }
 
     /**
-     * Возвращает true, если текущий запрос является PUT запросом, иначе false
+     * Returns whether this is a PUT request
      * @return bool
      * @since 1.1.0
      */
@@ -202,7 +204,7 @@ class Y
     }
 
     /**
-     * Возвращает true, если текущий запрос является DELETE запросом, иначе false
+     * Returns whether this is a DELETE request
      * @return bool
      * @since 1.1.0
      */
@@ -212,7 +214,7 @@ class Y
     }
 
     /**
-     * Возвращает true, если текущий запрос является POST запросом, иначе false
+     * Returns whether this is a POST request
      * @return bool
      * @since 1.1.0
      */
@@ -222,8 +224,8 @@ class Y
     }
 
     /**
-     * Возвращает cache-компонент приложения
-     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
+     * Returns the cache component
+     * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return ICache
      */
     public static function cache($cacheId = 'cache')
@@ -232,55 +234,59 @@ class Y
     }
 
     /**
-     * Удаляет кэш с ключом $id
-     * @param string $id Имя ключа
-     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
+     * Deletes a value with the specified key from cache
+     * @param string $key the key of the value to be deleted
+     * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return boolean
      */
-    public static function cacheDelete($id, $cacheId = 'cache')
+    public static function cacheDelete($key, $cacheId = 'cache')
     {
-        return self::_getComponent($cacheId)->delete($id);
+        return self::_getComponent($cacheId)->delete($key);
     }
 
     /**
-     * Возвращает значение кэша с ключом $id
-     * @param string $id Имя ключа
-     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
+     * Retrieves a value from cache with a specified key
+     * @param string $key a key identifying the cached value
+     * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return mixed
      */
-    public static function cacheGet($id, $cacheId = 'cache')
+    public static function cacheGet($key, $cacheId = 'cache')
     {
-        return self::_getComponent($cacheId)->get($id);
+        return self::_getComponent($cacheId)->get($key);
     }
 
     /**
-     * Сохраняет значение $value в кэш с ключом $id на время $expire (в секундах)
-     * @param string $id Имя ключа
-     * @param mixed $value Значение ключа
-     * @param integer $expire Время хранения в секундах
-     * @param ICacheDependency $dependency Смотри {@link ICacheDependency}
-     * @param string $cacheId ID кэш-компонента (@since 1.1.3)
+     * Stores a value identified by a key into cache. If the cache already contains such a key,
+     * the existing value and expiration time will be replaced with the new ones.
+     * @param string $key the key identifying the value to be cached
+     * @param mixed $value the value to be cached
+     * @param integer $expire the number of seconds in which the cached value will expire, 0 means never expire
+     * @param ICacheDependency $dependency dependency of the cached item.
+     * If the dependency changes, the item is labeled invalid (see {@link ICacheDependency})
+     * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return boolean
      */
-    public static function cacheSet($id, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
+    public static function cacheSet($key, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
     {
-        return self::_getComponent($cacheId)->set($id, $value, $expire, $dependency);
+        return self::_getComponent($cacheId)->set($key, $value, $expire, $dependency);
     }
 
     /**
-     * Удаляет куку
-     * @param string $name Имя куки
-     * @return CHttpCookie|null Объект удаленной куки или null, если куки с таким именем нет
+     * Removes a cookie with the specified name. Since Yii v1.1.11, the second parameter is available
+     * that can be used to specify the options of the CHttpCookie being removed (see {@link CCookieCollection::remove})
+     * @param string $name cookie name
+     * @param array $options cookie configuration array consisting of name-value pairs (@since 1.3.0)
+     * @return CHttpCookie|null The removed cookie object or null if cookie doesn't exist
      */
-    public static function cookieDelete($name)
+    public static function cookieDelete($name, $options = array())
     {
-        return self::_getComponent('request')->getCookies()->remove($name);
+        return self::_getComponent('request')->getCookies()->remove($name, $options);
     }
 
     /**
-     * Возвращает значение куки, если оно есть, иначе значение $defaultValue
-     * @param string $name Имя куки
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия куки с заданным именем (@since 1.1.0)
+     * Returns the cookie with the specified name
+     * @param string $name cookie name
+     * @param mixed $defaultValue the default value to be returned when the cookie does not exist (@since 1.1.0)
      * @return mixed
      */
     public static function cookieGet($name, $defaultValue = null)
@@ -295,24 +301,38 @@ class Y
     }
 
     /**
-     * Устанавливает куку
-     * @param string $name Имя куки
-     * @param string $value Значение куки
-     * @param int $expire Время хранения в секундах
-     * @param string $path Путь на сайте, для которого кука действительна
-     * @param string $domain Домен, для которого кука действительна
+     * Adds a cookie with the specified name
+     * @param string $name cookie name
+     * @param string|CHttpCookie $value cookie value or CHttpCookie object
+     * (if it's CHttpCookie object than all following params are ignored, @since 1.3.0)
+     * @param int $expire the time in seconds after which the cookie expires (84600 means 1 day).
+     * Defaults to 0, meaning "until the browser is closed".
+     * @param string $path the path on the server in which the cookie will be available on. The default is '/'.
+     * @param string $domain domain of the cookie
+     * @param bool $secure whether cookie should be sent via secure connection (@since 1.3.0)
+     * @param bool $httpOnly whether the cookie should be accessible only through the HTTP protocol.
+     * By setting this property to true, the cookie will not be accessible by scripting languages, such as JavaScript,
+     * which can effectly help to reduce identity theft through XSS attacks. Note, this property is only effective for
+     * PHP 5.2.0 or above. (@since 1.3.0)
      */
-    public static function cookieSet($name, $value, $expire = null, $path = '/', $domain = null)
+    public static function cookieSet($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
     {
-        $cookie = new CHttpCookie($name, $value);
-        $cookie->expire = $expire ? ($expire + time()) : 0;
-        $cookie->path = $path ? $path : '';
-        $cookie->domain = $domain ? $domain : '';
+        if ($value instanceof CHttpCookie) {
+            $cookie = $value;
+        } else {
+            $cookie = new CHttpCookie($name, $value);
+            $cookie->expire = $expire ? ($expire + time()) : 0;
+            $cookie->path = $path;
+            $cookie->domain = $domain;
+            $cookie->secure = $secure;
+            $cookie->httpOnly = $httpOnly;
+        }
+
         self::_getComponent('request')->getCookies()->add($name, $cookie);
     }
 
     /**
-     * Возвращает значение токена CSRF
+     * Returns the random token used to perform CSRF validation
      * @return string
      */
     public static function csrf()
@@ -321,7 +341,7 @@ class Y
     }
 
     /**
-     * Возвращает имя токена CSRF (по умолчанию YII_CSRF_TOKEN)
+     * Returns the name of the token used to prevent CSRF, defaults to 'YII_CSRF_TOKEN'
      * @return string
      */
     public static function csrfName()
@@ -330,12 +350,13 @@ class Y
     }
 
     /**
-     * Возвращает готовую строчку для передачи CSRF-параметра в ajax-запросе
+     * Returns ready to use 'key: value' string with CSRF token
+     * Primary usage: AJAX POST requests
      *
-     * Пример с использованием jQuery:
-     *      $.post('url', { param: 'blabla', <?=Y::csrfJsParam();?> }, ...)
-     * будет соответственно заменено на:
-     *      $.post('url', { param: 'blabla', [csrfName]: '[csrfToken]' }, ...)
+     * jQuery example:
+     *      $.post('url', { param: "blabla", <?=Y::csrfJsParam();?> }, ...)
+     * becomes:
+     *      $.post('url', { param: "blabla", "YII_CSRF_TOKEN": "n32Nm3112nqBQIjf..." }, ...)
      *
      * @return string
      */
@@ -343,13 +364,13 @@ class Y
     {
         $request = self::_getComponent('request');
 
-        return $request->csrfTokenName . ":'" . $request->getCsrfToken() . "'";
+        return '"' . $request->csrfTokenName . '":"' . $request->getCsrfToken() . '"';
     }
 
     /**
-     * Ярлык для функции dump класса CVarDumper для отладки приложения
-     * @param mixed $var Переменная для вывода
-     * @param boolean $doEnd Остановить ли дальнейшее выполнение приложения, по умолчанию - true
+     * Shortcut with 'pre' tags for dump function of CVarDumper class
+     * @param mixed $var variable to be dumped
+     * @param boolean $doEnd whether the application should be stopped after dumping
      */
     public static function dump($var, $doEnd = true)
     {
@@ -363,8 +384,8 @@ class Y
     }
 
     /**
-     * Выводит текст и завершает приложение (применяется в ajax-действиях)
-     * @param string $text Текст для вывода
+     * Prints some text and stops the application
+     * @param string $text text to be printed before application stopped
      */
     public static function end($text = '')
     {
@@ -373,48 +394,52 @@ class Y
     }
 
     /**
-     * Выводит данные в формате JSON / JSONP и завершает приложение (применяется в ajax-действиях)
-     * @param mixed $data Данные для вывода
-     * @param int $options JSON опции (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
+     * Converts data to JSON/JSONP, prints it out and stops the application
+     * @param mixed $data data to be converted in JSON
+     * @param int $options JSON options (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
      * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@since 1.1.3)
-     * Поддерживается только при наличии функции json_encode
-     * @param string $callback Имя callback-функции для JSONP-ответа
+     * Note, this parameter is only effective when json_encode function is available!
+     * @param string $callback name of the callback function for JSONP response
      */
     public static function endJson($data, $options = 0, $callback = '')
     {
         $result = function_exists('json_encode') ? json_encode($data, $options) : CJSON::encode($data);
 
-        if ($callback) {
-            header('Content-Type: application/javascript;');
-            echo $callback . '(' . $result . ');';
-        } else {
+        if (empty($callback)) {
             header('Content-Type: application/json;');
             echo $result;
+        } else {
+            header('Content-Type: application/javascript;');
+            echo $callback . '(' . $result . ');';
         }
 
         Yii::app()->end();
     }
 
     /**
-     * Устанавливает/возвращает флэш-извещение для юзера
-     * @param string $key Ключ извещения
-     * @param string $msg Сообщение извещения или null, чтобы получить сообщение
+     * Returns/stores a flash message. A flash message is available only in the current and the next requests.
+     * @param string $key key identifying the flash message
+     * @param mixed $message flash message to store or false to get a flash message (null to remove flash message)
+     * Example:
+     *   Y::flash('a', 'b')  - stores flash message 'b'
+     *   Y::flash('a')       - returns flash message for key 'a'
+     *   Y::flash('a', null) - removes flash message with key 'a'
      * @return string
      */
-    public static function flash($key, $msg = null)
+    public static function flash($key, $message = false)
     {
         $user = self::_getComponent('user');
 
-        if ($msg === null) {
+        if ($message === false) {
             return $user->getFlash($key);
         } else {
-            $user->setFlash($key, $msg);
+            $user->setFlash($key, $message);
         }
     }
 
     /**
-     * Возвращает true, если у юзера есть флэш-извещение с указанных ключом, иначе false
-     * @param string $key
+     * Whether or not user have a flash message with specified key
+     * @param string $key key identifying the flash message
      * @return bool
      * @since 1.1.2
      */
@@ -424,31 +449,39 @@ class Y
     }
 
     /**
-     * Устанавливает флэш-извещение для юзера и редиректит по указанному маршруту
-     * @param string $key Ключ извещения
-     * @param string $msg Сообщение извещения
-     * @param string $route Маршрут куда редиректить
-     * @param array $params Дополнительные параметры маршрута
+     * Stores a flash message and redirects to specified route
+     * @param string $key key identifying the flash message
+     * @param string $message flash message
+     * @param string $route the URL route to redirect to (see {@link CController::createUrl})
+     * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
-    public static function flashRedir($key, $msg, $route, $params = array())
+    public static function flashRedir($key, $message, $route, $params = array())
     {
-        self::_getComponent('user')->setFlash($key, $msg);
+        self::_getComponent('user')->setFlash($key, $message);
         self::_getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
-     * Проверяет наличие определенной роли у текущего юзера
-     * @param string $roleName Имя роли
-     * @return boolean
+     * Performs access check for this user
+     * @param string $operation the name of the operation that need access check
+     * @param array $params name-value pairs that would be passed to business rules associated with the tasks and roles
+     * assigned to the user. Since Yii v1.1.11 a param with name 'userId' is added to this array, which holds
+     * the value of getId() when CDbAuthManager or CPhpAuthManager is used (@since 1.3.0)
+     * @param bool $allowCaching whether to allow caching the result of access check.
+     * When this parameter is true (default), if the access check of an operation was performed before,
+     * its result will be directly returned when calling this method to check the same operation. If this parameter is
+     * false, this method will always call CAuthManager::checkAccess to obtain the up-to-date access result. Note that
+     * this caching is effective only within the same request and only works when $params=array() (@since 1.3.0)
+     * @return boolean whether the operations can be performed by this user
      * @since 1.0.2
      */
-    public static function hasAccess($roleName)
+    public static function hasAccess($operation, $params = array(), $allowCaching = true)
     {
-        return self::_getComponent('user')->checkAccess($roleName);
+        return self::_getComponent('user')->checkAccess($operation, $params, $allowCaching);
     }
 
     /**
-     * Возвращает true, если пользователь авторизован, иначе - false
+     * Returns true if the user is authenticated, otherwise - false
      * @return boolean
      */
     public static function isAuthed()
@@ -457,7 +490,7 @@ class Y
     }
 
     /**
-     * Возвращает true, если пользователь гость и неавторизован, иначе - false
+     * Returns true if the user is a guest (not authenticated), otherwise - false
      * @return boolean
      */
     public static function isGuest()
@@ -466,10 +499,10 @@ class Y
     }
 
     /**
-     * Возвращает пользовательский параметр приложения
-     * @param string $key Ключ параметра или ключи вложенных параметров через точку
-     * Например, 'Media.Foto.thumbsize' преобразуется в ['Media']['Foto']['thumbsize']
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия ключа
+     * Returns user-defined application parameter
+     * @param string $key key identifying the parameter (could be used dot delimiter for nested key)
+     * Example: 'Media.Foto.thumbsize' will return value at ['Media']['Foto']['thumbsize']
+     * @param mixed $defaultValue the default value to be returned when the parameter variable does not exist
      * @return mixed
      */
     public static function param($key, $defaultValue = null)
@@ -478,9 +511,9 @@ class Y
     }
 
     /**
-     * Редиректит по указанному маршруту
-     * @param string $route Маршрут
-     * @param array $params Дополнительные параметры маршрута
+     * Redirects the browser to the specified route
+     * @param string $route the URL route to redirect to (see {@link CController::createUrl})
+     * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
     public static function redir($route, $params = array())
     {
@@ -488,9 +521,9 @@ class Y
     }
 
     /**
-     * Редиректит по указанному роуту, если юзер авторизован
-     * @param string $route Маршрут
-     * @param array $params Дополнительные параметры маршрута
+     * Redirects the browser to the specified route if the user is authenticated
+     * @param string $route the URL route to redirect to (see {@link CController::createUrl})
+     * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
     public static function redirAuthed($route, $params = array())
     {
@@ -500,9 +533,9 @@ class Y
     }
 
     /**
-     * Редиректит по указанному роуту, если юзер гость
-     * @param string $route Маршрут
-     * @param array $params Дополнительные параметры маршрута
+     * Redirects the browser to the specified route if the user is a guest
+     * @param string $route the URL route to redirect to (see {@link CController::createUrl})
+     * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
     public static function redirGuest($route, $params = array())
     {
@@ -512,18 +545,9 @@ class Y
     }
 
     /**
-     * Возвращает request-компонент приложения
-     * @return CHttpRequest
-     */
-    public static function request()
-    {
-        return self::_getComponent('request');
-    }
-
-    /**
-     * Выводит статистику использованных приложением ресурсов
-     * @param boolean $return Определяет возвращать результат или сразу выводить
-     * @return string
+     * Prints application memory, SQL queries and time usage
+     * @param boolean $return whether data should be returned or printed out
+     * @return string|null
      */
     public static function stats($return = false)
     {
@@ -531,15 +555,15 @@ class Y
         $dbStats = Yii::app()->getDb()->getStats();
 
         if (is_array($dbStats)) {
-            $stats = 'Выполнено запросов: ' . $dbStats[0] . ' (за ' . round($dbStats[1], 5) . ' сек.)<br />';
+            $stats = 'SQL queries: ' . $dbStats[0] . ' (in ' . round($dbStats[1], 5) . ' seconds)<br />';
         }
 
         $logger = Yii::getLogger();
         $memory = round($logger->getMemoryUsage() / 1048576, 3);
         $time = round($logger->getExecutionTime(), 3);
 
-        $stats .= 'Использовано памяти: ' . $memory . ' Мб<br />';
-        $stats .= 'Время выполнения: ' . $time . ' сек.';
+        $stats .= 'Used memory: ' . $memory . ' Mb<br />';
+        $stats .= 'Execution time: ' . $time . ' seconds';
 
         if ($return) {
             return $stats;
@@ -549,9 +573,10 @@ class Y
     }
 
     /**
-     * Возвращает URL, сформированный на основе указанного маршрута и параметров
-     * @param string $route Маршрут
-     * @param array $params Дополнительные параметры маршрута
+     * Returns a relative URL based on the given controller and action information
+     * For more information see {@link CApplication::createUrl} and {@link CController::createUrl}
+     * @param string $route the URL route, this should be in the format of 'ControllerID/ActionID'
+     * @param array $params additional GET parameters (name=>value), both the name and value will be URL-encoded
      * @return string
      */
     public static function url($route, $params = array())
@@ -564,7 +589,6 @@ class Y
     }
 
     /**
-     * Возвращает user-компонент приложения
      * @return CWebUser
      */
     public static function user()
@@ -573,7 +597,7 @@ class Y
     }
 
     /**
-     * Возвращает Id текущего юзера
+     * Returns a value that uniquely represents the user, if null - it means the user is a guest
      * @return mixed
      */
     public static function userId()
@@ -582,9 +606,9 @@ class Y
     }
 
     /**
-     * Возвращает компонтент приложения
-     * Экономит лишние вызовы методов для получения компонентов путем кэширования компонентов
-     * @param string $componentName Имя компонента приложения
+     * Returns application component
+     * Reduces extra method calls by caching components (speeds up recurrent calls to a component)
+     * @param string $componentName application component name (request, db, user, etc...)
      * @return CComponent
      * @since 1.2.0
      */
@@ -598,11 +622,11 @@ class Y
     }
 
     /**
-     * Возвращает значения ключа в заданном массиве
-     * @param string $key Ключ или ключи точку
-     * Например, 'Media.Foto.thumbsize' преобразуется в ['Media']['Foto']['thumbsize']
-     * @param array $array Массив значений
-     * @param mixed $defaultValue Значение, возвращаемое в случае отсутствия ключа
+     * Returns the array variable value or $defaultValue if the array variable does not exist
+     * @param string $key the array variable name (could be used dot delimiter for nested variable)
+     * Example: variable name 'Media.Foto.thumbsize' will return value at $array['Media']['Foto']['thumbsize']
+     * @param array $array an array containing variable to return
+     * @param mixed $defaultValue the default value to be returned when the array variable does not exist
      * @return mixed
      */
     private static function _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
@@ -612,13 +636,13 @@ class Y
         }
 
         $keys = explode('.', $key);
+        $firstKey = array_shift($keys);
 
-        if (!isset($array[$keys[0]])) {
+        if (!isset($array[$firstKey])) {
             return $defaultValue;
         }
 
-        $value = $array[$keys[0]];
-        unset($keys[0]);
+        $value = $array[$firstKey];
 
         foreach ($keys as $k) {
             if (!isset($value[$k]) && !array_key_exists($k, $value)) {
