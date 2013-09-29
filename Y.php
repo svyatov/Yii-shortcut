@@ -5,8 +5,8 @@
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright Copyright (c) 2010-2013, Leonid Svyatov
  * @license BSD-3-Clause
- * @version 1.3.0 / 12.07.2013
- * @link http://github.com/Svyatov/Yii-shortcut
+ * @version 1.3.1 / 29.09.2013
+ * @link https://github.com/svyatov/Yii-shortcut
  */
 class Y
 {

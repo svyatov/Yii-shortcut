@@ -7,7 +7,7 @@ Shortcuts for [Yii framework](http://www.yiiframework.com)
 
 Install it via [Composer](http://getcomposer.org).
 
-Or get the [latest release](https://github.com/Svyatov/Yii-shortcut/releases) and put `Y.php` file in your application `protected/components` folder.
+Or get the [latest release](https://github.com/svyatov/Yii-shortcut/releases) and put `Y.php` file in your application `protected/components` folder.
 
 
 ## Usage
@@ -125,6 +125,10 @@ As you can see, the amount of code becomes at least 2 times smaller. So you need
 
 
 ## Changelog
+
+* **v1.3.1** / 28.09.2013
+
+    `fix` Fixed urls to repo. No code changes.
 
 * **v1.3.0** / 12.07.2013
 

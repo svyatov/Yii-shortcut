@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Shortcuts for Yii framework",
     "keywords": ["yii","shortcut","util","helper"],
-    "homepage": "https://github.com/Svyatov/Yii-shortcut",
+    "homepage": "https://github.com/svyatov/Yii-shortcut",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -15,8 +15,8 @@
     ],
     "support": {
         "email": "leonid@svyatov.ru",
-        "issues": "https://github.com/Svyatov/Yii-shortcut/issues?state=open",
-        "source": "https://github.com/Svyatov/Yii-shortcut"
+        "issues": "https://github.com/svyatov/Yii-shortcut/issues?state=open",
+        "source": "https://github.com/svyatov/Yii-shortcut"
     },
     "require": {
         "php": ">=5.3.2"
