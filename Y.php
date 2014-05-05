@@ -653,7 +653,7 @@ class Y
      * @return CComponent
      * @since 1.2.0
      */
-    private static function _getComponent($componentName)
+    protected static function _getComponent($componentName)
     {
         if (!isset(self::$_componentsCache[$componentName])) {
             self::$_componentsCache[$componentName] = Yii::app()->getComponent($componentName);

@@ -136,7 +136,9 @@ Changelog
 
 * **v1.3.2** / 05.05.2014
 
-    `fix` Composer autoloading fixed. No code changed.
+    `fix` Composer autoloading fixed.
+
+    `chg` Scope of _getComponent() and _getValueByComplexKeyFromArray() methods changed to protected.
 
     `chg` README.md enhanced and style updated.
 
