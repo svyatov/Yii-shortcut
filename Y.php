@@ -3,9 +3,9 @@
  * Shortcuts for Yii framework
  *
  * @author Leonid Svyatov <leonid@svyatov.ru>
- * @copyright Copyright (c) 2010-2013, Leonid Svyatov
+ * @copyright 2010-2014, Leonid Svyatov
  * @license BSD-3-Clause
- * @version 1.3.1 / 29.09.2013
+ * @version 1.3.2
  * @link https://github.com/svyatov/Yii-shortcut
  */
 class Y
@@ -53,6 +53,7 @@ class Y
 
     /**
      * Removes a session variable
+     *
      * @param string $key the name of the session variable to be removed
      * @return mixed the removed value, null if no such session variable
      * @since 1.2.0
@@ -64,6 +65,7 @@ class Y
 
     /**
      * Returns the session variable value or $defaultValue if the session variable does not exist
+     *
      * @param string $key the session variable name
      * @param mixed $defaultValue the default value to be returned when the session variable does not exist
      * @return mixed the session variable value, or $defaultValue if the session variable does not exist
@@ -76,6 +78,7 @@ class Y
 
     /**
      * Sets a session variable
+     *
      * @param string $key session variable name
      * @param mixed $value session variable value
      * @since 1.2.0
@@ -87,6 +90,7 @@ class Y
 
     /**
      * Creates and returns a DB command for execution
+     *
      * @param string|array $query the DB query to be executed. This can be either a string representing a SQL statement,
      * or an array representing different fragments of a SQL statement. Please refer to {@link CDbCommand::__construct}
      * for more details about how to pass an array as the query. If this parameter is not given, you will have to call
@@ -102,6 +106,7 @@ class Y
 
     /**
      * Returns the $_GET variable value or $defaultValue if the $_GET variable does not exist
+     *
      * @param string $name the $_GET variable name (could be used dot delimiter for nested variable)
      * Example: variable name 'Post.post_text' will return value at $_GET['Post']['post_text']
      * @param mixed $defaultValue the default value to be returned when the $_GET variable does not exist
@@ -115,6 +120,7 @@ class Y
 
     /**
      * Returns the $_POST variable value or $defaultValue if the $_POST variable does not exist
+     *
      * @param string $name the $_POST variable name (could be used dot delimiter for nested variable)
      * Example: variable name 'Post.post_text' will return value at $_POST['Post']['post_text']
      * @param mixed $defaultValue the default value to be returned when the $_POST variable does not exist
@@ -128,6 +134,7 @@ class Y
 
     /**
      * Returns the $_REQUEST variable value or $defaultValue if the $_REQUEST variable does not exist
+     *
      * @param string $name the $_REQUEST variable name (could be used dot delimiter for nested variable)
      * Example: variable name 'Post.post_text' will return value at $_REQUEST['Post']['post_text']
      * @param mixed $defaultValue the default value to be returned when the $_REQUEST variable does not exist
@@ -141,6 +148,7 @@ class Y
 
     /**
      * Returns the $_FILES variable value or $defaultValue if the $_FILES variable does not exist
+     *
      * @param string $name the $_FILES variable name (could be used dot delimiter for nested variable)
      * Example: variable name 'userfile.name' will return value at $_FILES['userfile']['name']
      * @param mixed $defaultValue the default value to be returned when the $_FILES variable does not exist
@@ -154,6 +162,7 @@ class Y
 
     /**
      * Returns the PDO instance
+     *
      * @param string $dbId ID of the DB component, default value is 'db'
      * @return \PDO the PDO instance, null if the connection is not established yet
      * @since 1.1.3
@@ -165,6 +174,7 @@ class Y
 
     /**
      * Returns the relative URL for the application
+     *
      * @param bool $absolute whether to return an absolute URL. Defaults to false, meaning returning a relative one (@since 1.1.0)
      * @return string
      */
@@ -175,6 +185,7 @@ class Y
 
     /**
      * Return if the request is sent via secure channel (https)
+     *
      * @return bool
      * @since 1.1.0
      */
@@ -185,6 +196,7 @@ class Y
 
     /**
      * Returns whether this is an AJAX (XMLHttpRequest) request
+     *
      * @return bool
      * @since 1.1.0
      */
@@ -195,6 +207,7 @@ class Y
 
     /**
      * Returns whether this is a PUT request
+     *
      * @return bool
      * @since 1.1.0
      */
@@ -205,6 +218,7 @@ class Y
 
     /**
      * Returns whether this is a DELETE request
+     *
      * @return bool
      * @since 1.1.0
      */
@@ -215,6 +229,7 @@ class Y
 
     /**
      * Returns whether this is a POST request
+     *
      * @return bool
      * @since 1.1.0
      */
@@ -225,6 +240,7 @@ class Y
 
     /**
      * Returns the cache component
+     *
      * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return ICache
      */
@@ -235,6 +251,7 @@ class Y
 
     /**
      * Deletes a value with the specified key from cache
+     *
      * @param string $key the key of the value to be deleted
      * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return boolean
@@ -246,6 +263,7 @@ class Y
 
     /**
      * Retrieves a value from cache with a specified key
+     *
      * @param string $key a key identifying the cached value
      * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return mixed
@@ -258,6 +276,7 @@ class Y
     /**
      * Stores a value identified by a key into cache. If the cache already contains such a key,
      * the existing value and expiration time will be replaced with the new ones.
+     *
      * @param string $key the key identifying the value to be cached
      * @param mixed $value the value to be cached
      * @param integer $expire the number of seconds in which the cached value will expire, 0 means never expire
@@ -274,6 +293,7 @@ class Y
     /**
      * Removes a cookie with the specified name. Since Yii v1.1.11, the second parameter is available
      * that can be used to specify the options of the CHttpCookie being removed (see {@link CCookieCollection::remove})
+     *
      * @param string $name cookie name
      * @param array $options cookie configuration array consisting of name-value pairs (@since 1.3.0)
      * @return CHttpCookie|null The removed cookie object or null if cookie doesn't exist
@@ -285,6 +305,7 @@ class Y
 
     /**
      * Returns the cookie with the specified name
+     *
      * @param string $name cookie name
      * @param mixed $defaultValue the default value to be returned when the cookie does not exist (@since 1.1.0)
      * @return mixed
@@ -302,6 +323,7 @@ class Y
 
     /**
      * Adds a cookie with the specified name
+     *
      * @param string $name cookie name
      * @param string|CHttpCookie $value cookie value or CHttpCookie object
      * (if it's CHttpCookie object than all following params are ignored, @since 1.3.0)
@@ -333,6 +355,7 @@ class Y
 
     /**
      * Returns the random token used to perform CSRF validation
+     *
      * @return string
      */
     public static function csrf()
@@ -342,6 +365,7 @@ class Y
 
     /**
      * Returns the name of the token used to prevent CSRF, defaults to 'YII_CSRF_TOKEN'
+     *
      * @return string
      */
     public static function csrfName()
@@ -369,6 +393,7 @@ class Y
 
     /**
      * Shortcut with 'pre' tags for dump function of CVarDumper class
+     *
      * @param mixed $var variable to be dumped
      * @param boolean $doEnd whether the application should be stopped after dumping
      */
@@ -385,6 +410,7 @@ class Y
 
     /**
      * Prints some text and stops the application
+     *
      * @param string $text text to be printed before application stopped
      */
     public static function end($text = '')
@@ -395,6 +421,7 @@ class Y
 
     /**
      * Converts data to JSON/JSONP, prints it out and stops the application
+     *
      * @param mixed $data data to be converted in JSON
      * @param int $options JSON options (JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS,
      * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT) (@since 1.1.3)
@@ -418,6 +445,7 @@ class Y
 
     /**
      * Returns/stores a flash message. A flash message is available only in the current and the next requests.
+     *
      * @param string $key key identifying the flash message
      * @param mixed $message flash message to store or false to get a flash message (null to remove flash message)
      * Example:
@@ -439,6 +467,7 @@ class Y
 
     /**
      * Whether or not user have a flash message with specified key
+     *
      * @param string $key key identifying the flash message
      * @return bool
      * @since 1.1.2
@@ -450,6 +479,7 @@ class Y
 
     /**
      * Stores a flash message and redirects to specified route
+     *
      * @param string $key key identifying the flash message
      * @param string $message flash message
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
@@ -463,6 +493,7 @@ class Y
 
     /**
      * Performs access check for this user
+     *
      * @param string $operation the name of the operation that need access check
      * @param array $params name-value pairs that would be passed to business rules associated with the tasks and roles
      * assigned to the user. Since Yii v1.1.11 a param with name 'userId' is added to this array, which holds
@@ -482,6 +513,7 @@ class Y
 
     /**
      * Returns true if the user is authenticated, otherwise - false
+     *
      * @return boolean
      */
     public static function isAuthed()
@@ -491,6 +523,7 @@ class Y
 
     /**
      * Returns true if the user is a guest (not authenticated), otherwise - false
+     *
      * @return boolean
      */
     public static function isGuest()
@@ -500,6 +533,7 @@ class Y
 
     /**
      * Returns user-defined application parameter
+     *
      * @param string $key key identifying the parameter (could be used dot delimiter for nested key)
      * Example: 'Media.Foto.thumbsize' will return value at ['Media']['Foto']['thumbsize']
      * @param mixed $defaultValue the default value to be returned when the parameter variable does not exist
@@ -512,6 +546,7 @@ class Y
 
     /**
      * Redirects the browser to the specified route
+     *
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
@@ -522,6 +557,7 @@ class Y
 
     /**
      * Redirects the browser to the specified route if the user is authenticated
+     *
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
@@ -534,6 +570,7 @@ class Y
 
     /**
      * Redirects the browser to the specified route if the user is a guest
+     *
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
@@ -546,6 +583,7 @@ class Y
 
     /**
      * Prints application memory, SQL queries and time usage
+     *
      * @param boolean $return whether data should be returned or printed out
      * @return string|null
      */
@@ -575,6 +613,7 @@ class Y
     /**
      * Returns a relative URL based on the given controller and action information
      * For more information see {@link CApplication::createUrl} and {@link CController::createUrl}
+     *
      * @param string $route the URL route, this should be in the format of 'ControllerID/ActionID'
      * @param array $params additional GET parameters (name=>value), both the name and value will be URL-encoded
      * @return string
@@ -598,6 +637,7 @@ class Y
 
     /**
      * Returns a value that uniquely represents the user, if null - it means the user is a guest
+     *
      * @return mixed
      */
     public static function userId()
@@ -608,6 +648,7 @@ class Y
     /**
      * Returns application component
      * Reduces extra method calls by caching components (speeds up recurrent calls to a component)
+     *
      * @param string $componentName application component name (request, db, user, etc...)
      * @return CComponent
      * @since 1.2.0
@@ -623,6 +664,7 @@ class Y
 
     /**
      * Returns the array variable value or $defaultValue if the array variable does not exist
+     *
      * @param string $key the array variable name (could be used dot delimiter for nested variable)
      * Example: variable name 'Media.Foto.thumbsize' will return value at $array['Media']['Foto']['thumbsize']
      * @param array $array an array containing variable to return
