@@ -671,7 +671,7 @@ class Y
      * @param mixed $defaultValue the default value to be returned when the array variable does not exist
      * @return mixed
      */
-    private static function _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
+    protected static function _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
     {
         if (strpos($key, '.') === false) {
             return (isset($array[$key])) ? $array[$key] : $defaultValue;
