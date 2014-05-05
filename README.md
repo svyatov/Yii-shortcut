@@ -1,21 +1,27 @@
-# Y
+Y
+=
 
-Shortcuts for [Yii framework](http://www.yiiframework.com)
-
-
-## Install
-
-Install it via [Composer](http://getcomposer.org).
-
-Or get the [latest release](https://github.com/svyatov/Yii-shortcut/releases) and put `Y.php` file in your application `protected/components` folder.
+Shortcuts for [Yii framework](http://www.yiiframework.com) v1.1
 
 
-## Usage
+Install
+-------
 
-1) creating URL by route in a widget
+### via Composer (recommended)
+
+`php composer.phar require svyatov/yii-shortcut '~1.3'`
+
+### via download
+
+Get the [latest release](https://github.com/svyatov/Yii-shortcut/releases) and put `Y.php` file in your application `protected/components` folder.
+
+
+Usage
+-----
+
+#### Creating URL by route in a widget
 
 ```php
-<?php
 // Standart code
 Yii::app()->controller->createUrl('user/login');
 
@@ -23,10 +29,9 @@ Yii::app()->controller->createUrl('user/login');
 Y::url('user/login');
 ```
 
-2) Get/set some cache value
+#### Get/set some cache value
 
 ```php
-<?php
 // Standart code
 Yii::app()->cache->get('user_settings');
 Yii::app()->cache->set('user_settings', $userSettings);
@@ -36,12 +41,18 @@ Y::cacheGet('user_settings');
 Y::cacheSet('user_settings', $userSettings);
 ```
 
-3) the same with cookies;
-
-4) getting the value of CSRF token
+#### The same with cookies
 
 ```php
-<?php
+// Y code
+Y::cookieGet('user_settings');
+Y::cookieSet('user_settings', $userSettings);
+```
+
+
+#### Getting the value of CSRF token
+
+```php
 // Standart code
 Yii::app()->request->csrfToken;
 
@@ -49,7 +60,7 @@ Yii::app()->request->csrfToken;
 Y::csrf();
 ```
 
-5) inserting CSRF name and token in some jQuery request
+#### Inserting CSRF name and token in some jQuery request
 
 ```phtml
 // Standart code
@@ -63,10 +74,9 @@ $.post('/user/login', {<?=Y::csrfJsParam();?>, ...} ...);
 </script>
 ```
 
-6) quick variable dump with code highlighting
+#### Quick variable dump with code highlighting
 
 ```php
-<?php
 // Standart code
 echo '<pre>';
 CVarDumper::dump($testVariable, 10, true);
@@ -76,10 +86,9 @@ Yii::app()->end();
 Y::dump($testVariable);
 ```
 
-7) short action ending without template rendering (e.g. for AJAX requests)
+#### Short action ending without template rendering (e.g. for AJAX requests)
 
 ```php
-<?php
 // Standart code
 echo $result;
 Yii::app()->end();
@@ -93,10 +102,9 @@ Y::end($result);
 Y::endJson($result);
 ```
 
-8) redirects
+#### Redirects
 
 ```php
-<?php
 // Standart code
 $this->redirect($this->createUrl('user/settings')); // the shortest example
 Yii::app()->request->redirect(Yii::app()->controller->createUrl('user/settings')); // if we inside some widget
@@ -105,10 +113,9 @@ Yii::app()->request->redirect(Yii::app()->controller->createUrl('user/settings')
 Y::redir('user/settings'); // you can use wherever you want, controller/widget, it doesn't matter
 ```
 
-9) detecting current user status (is he a guest or he is authenticated)
+#### Detecting current user status (is he a guest or is he authenticated)
 
 ```php
-<?php
 // Standart code
 if (Yii::app()->user->isGuest) {} // is user a guest?
 // or
@@ -118,17 +125,26 @@ if (!Yii::app()->user->isGuest) {} // is user authenticated?
 if (Y::isGuest()) {} // is user a guest?
 // or
 if (Y::isAuthed()) {} // is user authenticated?
-// the code speaks for himself, it's more expressive and more readable
+// the code speaks for himself, it's more expressive and readable
 ```
 
-As you can see, the amount of code becomes at least 2 times smaller. So you need to type 2 times less and you can read and understand it 2 times faster.
+As you can see, the amount of code becomes at least 2 times smaller. So you need to type at least 2 times less and you can read it and understand it at least 2 times faster.
 
 
-## Changelog
+Changelog
+---------
+
+* **v1.3.2** / 05.05.2014
+
+    `fix` Composer autoloading fixed. No code changed.
+
+    `chg` README.md enhanced and style updated.
+
+    `chg` phpDoc comments light reformat.
 
 * **v1.3.1** / 28.09.2013
 
-    `fix` Fixed urls to repo. No code changes.
+    `fix` Fixed urls to repo. No code changed.
 
 * **v1.3.0** / 12.07.2013
 
