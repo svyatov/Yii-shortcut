@@ -1,20 +1,39 @@
 <?php
+
 /**
  * Shortcuts for Yii framework
  *
  * @author Leonid Svyatov <leonid@svyatov.ru>
  * @copyright 2010-2014, Leonid Svyatov
  * @license BSD-3-Clause
- * @version 1.3.2
+ * @version 2.0.0
  * @link https://github.com/svyatov/Yii-shortcut
  */
 class Y
 {
     /**
-     * @var array application components cache
-     * @since 1.2.0
+     * Returns application component
+     *
+     * @param string $moduleName application module name
+     * @return CModule
+     * @since 2.0.0
      */
-    private static $_componentsCache = array();
+    public static function module($moduleName)
+    {
+        return Yii::app()->getModule($moduleName);
+    }
+
+    /**
+     * Returns application component
+     *
+     * @param string $componentName application component name (request, db, user, etc...)
+     * @return CComponent
+     * @since 2.0.0
+     */
+    protected static function component($componentName)
+    {
+        return Yii::app()->getComponent($componentName);
+    }
 
     /**
      * @return CFormatter
@@ -22,7 +41,7 @@ class Y
      */
     public static function format()
     {
-        return self::_getComponent('format');
+        return Yii::app()->getComponent('format');
     }
 
     /**
@@ -31,7 +50,7 @@ class Y
      */
     public static function script()
     {
-        return self::_getComponent('clientScript');
+        return Yii::app()->getComponent('clientScript');
     }
 
     /**
@@ -39,7 +58,7 @@ class Y
      */
     public static function request()
     {
-        return self::_getComponent('request');
+        return Yii::app()->getComponent('request');
     }
 
     /**
@@ -48,7 +67,26 @@ class Y
      */
     public static function session()
     {
-        return self::_getComponent('session');
+        return Yii::app()->getComponent('session');
+    }
+
+    /**
+     * Returns the cache component
+     *
+     * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
+     * @return ICache
+     */
+    public static function cache($cacheId = 'cache')
+    {
+        return Yii::app()->getComponent($cacheId);
+    }
+
+    /**
+     * @return CWebUser
+     */
+    public static function user()
+    {
+        return Yii::app()->getComponent('user');
     }
 
     /**
@@ -58,9 +96,9 @@ class Y
      * @return mixed the removed value, null if no such session variable
      * @since 1.2.0
      */
-    public static function sessionDelete($key)
+    public static function deleteSession($key)
     {
-        return self::_getComponent('session')->remove($key);
+        return Yii::app()->getComponent('session')->remove($key);
     }
 
     /**
@@ -71,9 +109,9 @@ class Y
      * @return mixed the session variable value, or $defaultValue if the session variable does not exist
      * @since 1.2.0
      */
-    public static function sessionGet($key, $defaultValue = null)
+    public static function getSession($key, $defaultValue = null)
     {
-        return self::_getComponent('session')->get($key, $defaultValue);
+        return Yii::app()->getComponent('session')->get($key, $defaultValue);
     }
 
     /**
@@ -83,9 +121,9 @@ class Y
      * @param mixed $value session variable value
      * @since 1.2.0
      */
-    public static function sessionSet($key, $value)
+    public static function setSession($key, $value)
     {
-        self::_getComponent('session')->add($key, $value);
+        Yii::app()->getComponent('session')->add($key, $value);
     }
 
     /**
@@ -99,9 +137,9 @@ class Y
      * @return CDbCommand
      * @since 1.1.5
      */
-    public static function dbCmd($query = null, $dbId = 'db')
+    public static function dbCmd($query = '', $dbId = 'db')
     {
-        return self::_getComponent($dbId)->createCommand($query);
+        return Yii::app()->getComponent($dbId)->createCommand($query);
     }
 
     /**
@@ -113,9 +151,9 @@ class Y
      * @return mixed
      * @since 1.1.2
      */
-    public static function getGet($name, $defaultValue = null)
+    public static function GET($name, $defaultValue = null)
     {
-        return self::_getValueByComplexKeyFromArray($name, $_GET, $defaultValue);
+        return self::getValueByComplexKeyFromArray($name, $_GET, $defaultValue);
     }
 
     /**
@@ -127,23 +165,9 @@ class Y
      * @return mixed
      * @since 1.1.2
      */
-    public static function getPost($name, $defaultValue = null)
+    public static function POST($name, $defaultValue = null)
     {
-        return self::_getValueByComplexKeyFromArray($name, $_POST, $defaultValue);
-    }
-
-    /**
-     * Returns the $_REQUEST variable value or $defaultValue if the $_REQUEST variable does not exist
-     *
-     * @param string $name the $_REQUEST variable name (could be used dot delimiter for nested variable)
-     * Example: variable name 'Post.post_text' will return value at $_REQUEST['Post']['post_text']
-     * @param mixed $defaultValue the default value to be returned when the $_REQUEST variable does not exist
-     * @return mixed
-     * @since 1.1.2
-     */
-    public static function getRequest($name, $defaultValue = null)
-    {
-        return self::_getValueByComplexKeyFromArray($name, $_REQUEST, $defaultValue);
+        return self::getValueByComplexKeyFromArray($name, $_POST, $defaultValue);
     }
 
     /**
@@ -155,9 +179,9 @@ class Y
      * @return mixed
      * @since 1.2.1
      */
-    public static function getFile($name, $defaultValue = null)
+    public static function FILES($name, $defaultValue = null)
     {
-        return self::_getValueByComplexKeyFromArray($name, $_FILES, $defaultValue);
+        return self::getValueByComplexKeyFromArray($name, $_FILES, $defaultValue);
     }
 
     /**
@@ -169,7 +193,7 @@ class Y
      */
     public static function getPdo($dbId = 'db')
     {
-        return self::_getComponent($dbId)->getPdoInstance();
+        return Yii::app()->getComponent($dbId)->getPdoInstance();
     }
 
     /**
@@ -180,7 +204,7 @@ class Y
      */
     public static function baseUrl($absolute = false)
     {
-        return self::_getComponent('request')->getBaseUrl($absolute);
+        return Yii::app()->getComponent('request')->getBaseUrl($absolute);
     }
 
     /**
@@ -191,7 +215,7 @@ class Y
      */
     public static function isSecureConnection()
     {
-        return self::_getComponent('request')->getIsSecureConnection();
+        return Yii::app()->getComponent('request')->getIsSecureConnection();
     }
 
     /**
@@ -202,7 +226,7 @@ class Y
      */
     public static function isAjaxRequest()
     {
-        return self::_getComponent('request')->getIsAjaxRequest();
+        return Yii::app()->getComponent('request')->getIsAjaxRequest();
     }
 
     /**
@@ -213,7 +237,7 @@ class Y
      */
     public static function isPutRequest()
     {
-        return self::_getComponent('request')->getIsPutRequest();
+        return Yii::app()->getComponent('request')->getIsPutRequest();
     }
 
     /**
@@ -224,7 +248,7 @@ class Y
      */
     public static function isDeleteRequest()
     {
-        return self::_getComponent('request')->getIsDeleteRequest();
+        return Yii::app()->getComponent('request')->getIsDeleteRequest();
     }
 
     /**
@@ -235,18 +259,7 @@ class Y
      */
     public static function isPostRequest()
     {
-        return self::_getComponent('request')->getIsPostRequest();
-    }
-
-    /**
-     * Returns the cache component
-     *
-     * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
-     * @return ICache
-     */
-    public static function cache($cacheId = 'cache')
-    {
-        return self::_getComponent($cacheId);
+        return Yii::app()->getComponent('request')->getIsPostRequest();
     }
 
     /**
@@ -256,9 +269,9 @@ class Y
      * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return boolean
      */
-    public static function cacheDelete($key, $cacheId = 'cache')
+    public static function deleteCache($key, $cacheId = 'cache')
     {
-        return self::_getComponent($cacheId)->delete($key);
+        return Yii::app()->getComponent($cacheId)->delete($key);
     }
 
     /**
@@ -268,9 +281,9 @@ class Y
      * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return mixed
      */
-    public static function cacheGet($key, $cacheId = 'cache')
+    public static function getCache($key, $cacheId = 'cache')
     {
-        return self::_getComponent($cacheId)->get($key);
+        return Yii::app()->getComponent($cacheId)->get($key);
     }
 
     /**
@@ -285,9 +298,9 @@ class Y
      * @param string $cacheId ID of the cache component, defaults to 'cache' (@since 1.1.3)
      * @return boolean
      */
-    public static function cacheSet($key, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
+    public static function setCache($key, $value, $expire = 0, $dependency = null, $cacheId = 'cache')
     {
-        return self::_getComponent($cacheId)->set($key, $value, $expire, $dependency);
+        return Yii::app()->getComponent($cacheId)->set($key, $value, $expire, $dependency);
     }
 
     /**
@@ -298,9 +311,9 @@ class Y
      * @param array $options cookie configuration array consisting of name-value pairs (@since 1.3.0)
      * @return CHttpCookie|null The removed cookie object or null if cookie doesn't exist
      */
-    public static function cookieDelete($name, $options = array())
+    public static function deleteCookie($name, $options = array())
     {
-        return self::_getComponent('request')->getCookies()->remove($name, $options);
+        return Yii::app()->getComponent('request')->getCookies()->remove($name, $options);
     }
 
     /**
@@ -310,9 +323,9 @@ class Y
      * @param mixed $defaultValue the default value to be returned when the cookie does not exist (@since 1.1.0)
      * @return mixed
      */
-    public static function cookieGet($name, $defaultValue = null)
+    public static function getCookie($name, $defaultValue = null)
     {
-        $cookie = self::_getComponent('request')->getCookies()->itemAt($name);
+        $cookie = Yii::app()->getComponent('request')->getCookies()->itemAt($name);
 
         if ($cookie) {
             return $cookie->value;
@@ -337,7 +350,7 @@ class Y
      * which can effectly help to reduce identity theft through XSS attacks. Note, this property is only effective for
      * PHP 5.2.0 or above. (@since 1.3.0)
      */
-    public static function cookieSet($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
+    public static function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
     {
         if ($value instanceof CHttpCookie) {
             $cookie = $value;
@@ -350,7 +363,7 @@ class Y
             $cookie->httpOnly = $httpOnly;
         }
 
-        self::_getComponent('request')->getCookies()->add($name, $cookie);
+        Yii::app()->getComponent('request')->getCookies()->add($name, $cookie);
     }
 
     /**
@@ -360,7 +373,7 @@ class Y
      */
     public static function csrf()
     {
-        return self::_getComponent('request')->getCsrfToken();
+        return Yii::app()->getComponent('request')->getCsrfToken();
     }
 
     /**
@@ -370,7 +383,7 @@ class Y
      */
     public static function csrfName()
     {
-        return self::_getComponent('request')->csrfTokenName;
+        return Yii::app()->getComponent('request')->csrfTokenName;
     }
 
     /**
@@ -386,7 +399,7 @@ class Y
      */
     public static function csrfJsParam()
     {
-        $request = self::_getComponent('request');
+        $request = Yii::app()->getComponent('request');
 
         return '"' . $request->csrfTokenName . '":"' . $request->getCsrfToken() . '"';
     }
@@ -456,7 +469,7 @@ class Y
      */
     public static function flash($key, $message = false)
     {
-        $user = self::_getComponent('user');
+        $user = Yii::app()->getComponent('user');
 
         if ($message === false) {
             return $user->getFlash($key);
@@ -474,7 +487,7 @@ class Y
      */
     public static function hasFlash($key)
     {
-        return self::_getComponent('user')->hasFlash($key);
+        return Yii::app()->getComponent('user')->hasFlash($key);
     }
 
     /**
@@ -485,10 +498,10 @@ class Y
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
-    public static function flashRedir($key, $message, $route, $params = array())
+    public static function flashAndRedirect($key, $message, $route, $params = array())
     {
-        self::_getComponent('user')->setFlash($key, $message);
-        self::_getComponent('request')->redirect(self::url($route, $params));
+        Yii::app()->getComponent('user')->setFlash($key, $message);
+        Yii::app()->getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
@@ -506,9 +519,9 @@ class Y
      * @return boolean whether the operations can be performed by this user
      * @since 1.0.2
      */
-    public static function hasAccess($operation, $params = array(), $allowCaching = true)
+    public static function checkAccess($operation, $params = array(), $allowCaching = true)
     {
-        return self::_getComponent('user')->checkAccess($operation, $params, $allowCaching);
+        return Yii::app()->getComponent('user')->checkAccess($operation, $params, $allowCaching);
     }
 
     /**
@@ -516,9 +529,9 @@ class Y
      *
      * @return boolean
      */
-    public static function isAuthed()
+    public static function isAuthenticated()
     {
-        return !self::_getComponent('user')->getIsGuest();
+        return !Yii::app()->getComponent('user')->getIsGuest();
     }
 
     /**
@@ -528,7 +541,7 @@ class Y
      */
     public static function isGuest()
     {
-        return self::_getComponent('user')->getIsGuest();
+        return Yii::app()->getComponent('user')->getIsGuest();
     }
 
     /**
@@ -541,7 +554,7 @@ class Y
      */
     public static function param($key, $defaultValue = null)
     {
-        return self::_getValueByComplexKeyFromArray($key, Yii::app()->getParams(), $defaultValue);
+        return self::getValueByComplexKeyFromArray($key, Yii::app()->getParams(), $defaultValue);
     }
 
     /**
@@ -550,9 +563,9 @@ class Y
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
-    public static function redir($route, $params = array())
+    public static function redirect($route, $params = array())
     {
-        self::_getComponent('request')->redirect(self::url($route, $params));
+        Yii::app()->getComponent('request')->redirect(self::url($route, $params));
     }
 
     /**
@@ -561,10 +574,10 @@ class Y
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
-    public static function redirAuthed($route, $params = array())
+    public static function redirectIfAuthenticated($route, $params = array())
     {
-        if (!self::_getComponent('user')->getIsGuest()) {
-            self::_getComponent('request')->redirect(self::url($route, $params));
+        if (!Yii::app()->getComponent('user')->getIsGuest()) {
+            Yii::app()->getComponent('request')->redirect(self::url($route, $params));
         }
     }
 
@@ -574,10 +587,10 @@ class Y
      * @param string $route the URL route to redirect to (see {@link CController::createUrl})
      * @param array $params additional GET parameters (see {@link CController::createUrl})
      */
-    public static function redirGuest($route, $params = array())
+    public static function redirectIfGuest($route, $params = array())
     {
-        if (self::_getComponent('user')->getIsGuest()) {
-            self::_getComponent('request')->redirect(self::url($route, $params));
+        if (Yii::app()->getComponent('user')->getIsGuest()) {
+            Yii::app()->getComponent('request')->redirect(self::url($route, $params));
         }
     }
 
@@ -628,38 +641,13 @@ class Y
     }
 
     /**
-     * @return CWebUser
-     */
-    public static function user()
-    {
-        return self::_getComponent('user');
-    }
-
-    /**
      * Returns a value that uniquely represents the user, if null - it means the user is a guest
      *
      * @return mixed
      */
     public static function userId()
     {
-        return self::_getComponent('user')->getId();
-    }
-
-    /**
-     * Returns application component
-     * Reduces extra method calls by caching components (speeds up recurrent calls to a component)
-     *
-     * @param string $componentName application component name (request, db, user, etc...)
-     * @return CComponent
-     * @since 1.2.0
-     */
-    protected static function _getComponent($componentName)
-    {
-        if (!isset(self::$_componentsCache[$componentName])) {
-            self::$_componentsCache[$componentName] = Yii::app()->getComponent($componentName);
-        }
-
-        return self::$_componentsCache[$componentName];
+        return Yii::app()->getComponent('user')->getId();
     }
 
     /**
@@ -671,7 +659,7 @@ class Y
      * @param mixed $defaultValue the default value to be returned when the array variable does not exist
      * @return mixed
      */
-    protected static function _getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
+    public static function getValueByComplexKeyFromArray($key, $array, $defaultValue = null)
     {
         if (strpos($key, '.') === false) {
             return (isset($array[$key])) ? $array[$key] : $defaultValue;

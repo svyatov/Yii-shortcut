@@ -9,7 +9,7 @@ Install
 
 ### via Composer (recommended)
 
-`php composer.phar require svyatov/yii-shortcut '~1.3'`
+`php composer.phar require svyatov/yii-shortcut '~2.0'`
 
 ### via download
 
@@ -37,16 +37,16 @@ Yii::app()->cache->get('user_settings');
 Yii::app()->cache->set('user_settings', $userSettings);
 
 // Y code
-Y::cacheGet('user_settings');
-Y::cacheSet('user_settings', $userSettings);
+Y::getCache('user_settings');
+Y::setCache('user_settings', $userSettings);
 ```
 
 #### The same with cookies
 
 ```php
 // Y code
-Y::cookieGet('user_settings');
-Y::cookieSet('user_settings', $userSettings);
+Y::getCookie('user_settings');
+Y::setCookie('user_settings', $userSettings);
 ```
 
 
@@ -110,7 +110,7 @@ $this->redirect($this->createUrl('user/settings')); // the shortest example
 Yii::app()->request->redirect(Yii::app()->controller->createUrl('user/settings')); // if we inside some widget
 
 // Y code
-Y::redir('user/settings'); // you can use wherever you want, controller/widget, it doesn't matter
+Y::redirect('user/settings'); // you can use wherever you want, controller/widget, it doesn't matter
 ```
 
 #### Detecting current user status (is he a guest or is he authenticated)
@@ -124,7 +124,7 @@ if (!Yii::app()->user->isGuest) {} // is user authenticated?
 // Y code
 if (Y::isGuest()) {} // is user a guest?
 // or
-if (Y::isAuthed()) {} // is user authenticated?
+if (Y::isAuthenticated()) {} // is user authenticated?
 // the code speaks for himself, it's more expressive and readable
 ```
 
@@ -133,6 +133,31 @@ As you can see, the amount of code becomes at least 2 times smaller. So you need
 
 Changelog
 ---------
+
+* **v2.0.0** / 26.08.2014
+
+    `new` Added new methods: module() and component().
+
+    `chg` Removed protected method _getComponent().
+
+    `chg` Removed method getRequest().
+
+    `chg` Protected method _getValueByComplexKeyFromArray() renamed to getValueByComplexKeyFromArray() and changed to public.
+
+    `chg` Methods getGet(), getPost() and getFiles() renamed to GET(), POST() and FILES() respectively.
+
+    `chg` Method isAuthed() renamed to isAuthenticated().
+
+    `chg` Method redir() renamed to redirect().
+
+    `chg` Method flashRedir() renamed to flashAndRedirect().
+
+    `chg` Methods redirAuthed() and redirGuest() renamed to redirectIfAuthenticated() and redirectIfGuest() respectively.
+
+    `chg` Method hasAccess() renamed to checkAccess().
+
+    `chg` Setters, getters and deleters for cache, cookie and session renamed to comply common pattern, e.g.: cacheSet() -> setCache().
+
 
 * **v1.3.2** / 05.05.2014
 
